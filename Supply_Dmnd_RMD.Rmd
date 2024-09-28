@@ -1,6 +1,6 @@
 ---
 title: "Supply Demand Gap Analysis"
-output: html_document
+output: pdf_document
 date: "2024-09-28"
 ---
 
