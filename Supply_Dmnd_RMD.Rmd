@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 getwd()
 
-#Library Load: install the following packages if you do not have them allready
+#Library Load: install the following packages if you do not have them already
 library(dplyr)
 library(lubridate)
 library(ggplot2)
@@ -31,10 +31,10 @@ library(zoo)
 common_path <- getwd()
 target_folder <- paste0(common_path, "/data/lmi-data/")
 
-# Create the target folder, this will be helpful so all groupmemebers will automatically have a folder created
+# Create the target folder, this will be helpful so all group members will automatically have a folder created
   dir.create(target_folder, recursive = TRUE)
 
-# URLs for the different regions, these are all the excell sheets on the Ohio LMI website for each region
+# URLs for the different regions, these are all the excel sheets on the Ohio LMI website for each region
 url_northeast <- "https://ohiolmi.com/_docs/PROJ/JobsOhio/Northeast.xlsx"
 url_central <- "https://ohiolmi.com/_docs/PROJ/JobsOhio/Central.xlsx"
 url_west <- "https://ohiolmi.com/_docs/PROJ/JobsOhio/West.xlsx"
@@ -239,7 +239,7 @@ ohio_region_lmi_data <- bind_rows(lmi_oews, ohio_data_trimmed)%>%
       jobsohioregion == "Central" ~ 5L,
       jobsohioregion == "Southeast" ~ 6L,
       jobsohioregion == "Ohio" ~ 39L, #ohio to 39, check this is true for all
-      TRUE ~ NA_integer_  # For any unmatched regions, set to NA, should removed these or see why they occured
+      TRUE ~ NA_integer_  # For any unmatched regions, set to NA, should removed these or see why they occurred
      )
     )
 #Will have to fix manual vs hourly wage data later on it looks like. Pay attention to the wage symbol. 
