@@ -1,0 +1,796 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Supply Demand Gap Analysis},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Supply Demand Gap Analysis}
+\author{}
+\date{\vspace{-2.5em}2024-09-28}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# This code reads the LMI jobs demand data by region and occupation from the ODJFS website. }
+
+\CommentTok{\#Paths}
+\NormalTok{common\_path }\OtherTok{\textless{}{-}} \FunctionTok{getwd}\NormalTok{()}
+\NormalTok{target\_folder }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(common\_path, }\StringTok{"/data/lmi{-}data/"}\NormalTok{)}
+
+\CommentTok{\# Create the target folder, this will be helpful so all group members will automatically have a folder created}
+  \FunctionTok{dir.create}\NormalTok{(target\_folder, }\AttributeTok{recursive =} \ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in dir.create(target_folder, recursive = TRUE):
+## 'C:\Users\marko\7250-Project\data\lmi-data' already exists
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# URLs for the different regions, these are all the excel sheets on the Ohio LMI website for each region}
+\NormalTok{url\_northeast }\OtherTok{\textless{}{-}} \StringTok{"https://ohiolmi.com/\_docs/PROJ/JobsOhio/Northeast.xlsx"}
+\NormalTok{url\_central }\OtherTok{\textless{}{-}} \StringTok{"https://ohiolmi.com/\_docs/PROJ/JobsOhio/Central.xlsx"}
+\NormalTok{url\_west }\OtherTok{\textless{}{-}} \StringTok{"https://ohiolmi.com/\_docs/PROJ/JobsOhio/West.xlsx"}
+\NormalTok{url\_southeast }\OtherTok{\textless{}{-}} \StringTok{"https://ohiolmi.com/\_docs/PROJ/JobsOhio/Southeast.xlsx"}
+\NormalTok{url\_northwest }\OtherTok{\textless{}{-}} \StringTok{"https://ohiolmi.com/\_docs/PROJ/JobsOhio/Northwest.xlsx"}
+\NormalTok{url\_southwest }\OtherTok{\textless{}{-}} \StringTok{"https://ohiolmi.com/\_docs/PROJ/JobsOhio/Southwest.xlsx"}
+
+
+
+\CommentTok{\# Process Northeast region First}
+\NormalTok{temp\_northeast }\OtherTok{\textless{}{-}} \FunctionTok{tempfile}\NormalTok{(}\AttributeTok{fileext =} \StringTok{".xlsx"}\NormalTok{)}
+\NormalTok{response\_northeast }\OtherTok{\textless{}{-}} \FunctionTok{GET}\NormalTok{(url\_northeast, }\FunctionTok{write\_disk}\NormalTok{(temp\_northeast, }\AttributeTok{overwrite =} \ConstantTok{TRUE}\NormalTok{)) }\CommentTok{\#Calls the url, trys to read the xlsx}
+\NormalTok{  headers\_northeast }\OtherTok{\textless{}{-}} \FunctionTok{suppressMessages}\NormalTok{(}\FunctionTok{read\_excel}\NormalTok{(temp\_northeast, }\AttributeTok{range =} \FunctionTok{cell\_rows}\NormalTok{(}\DecValTok{3}\SpecialCharTok{:}\DecValTok{6}\NormalTok{))) }
+  \CommentTok{\#Have to get rid of bad headers}
+\NormalTok{  headers\_northeast }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(headers\_northeast, }\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{paste}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(x), }\AttributeTok{collapse =} \StringTok{" "}\NormalTok{))}
+\NormalTok{  headers\_northeast }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(headers\_northeast, }\StringTok{"med wage symbol"}\NormalTok{)}
+\NormalTok{  data\_northeast }\OtherTok{\textless{}{-}} \FunctionTok{suppressMessages}\NormalTok{(}\FunctionTok{read\_excel}\NormalTok{(temp\_northeast, }\AttributeTok{skip =} \DecValTok{5}\NormalTok{)) }
+  \CommentTok{\#Skip the first 5 rows! all headers of white space. }
+  \FunctionTok{colnames}\NormalTok{(data\_northeast) }\OtherTok{\textless{}{-}}\NormalTok{ headers\_northeast[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{12}\NormalTok{]}
+  \CommentTok{\#grab the names from only these headers}
+\NormalTok{  rows\_all\_na\_northeast }\OtherTok{\textless{}{-}} \FunctionTok{rowSums}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(data\_northeast)) }\SpecialCharTok{==} \FunctionTok{ncol}\NormalTok{(data\_northeast)}
+\NormalTok{  first\_all\_na\_row\_northeast }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(rows\_all\_na\_northeast)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{  data\_northeast }\OtherTok{\textless{}{-}}\NormalTok{ data\_northeast[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{(first\_all\_na\_row\_northeast }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{), ]}
+  \CommentTok{\#that\textquotesingle{}s annoying, but this should give us JUST the headers and not weird splits or missing headers. }
+\NormalTok{  data\_northeast}\SpecialCharTok{$}\NormalTok{jobsohioregion }\OtherTok{\textless{}{-}} \StringTok{"Northeast"}
+
+
+\CommentTok{\#OKAY, now do the same thing for all the other 5 regions, just past the above and change the region name as appropriate. We could probably write a loop....but I am lazy}
+\CommentTok{\# Process Central region\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}
+\NormalTok{temp\_central }\OtherTok{\textless{}{-}} \FunctionTok{tempfile}\NormalTok{(}\AttributeTok{fileext =} \StringTok{".xlsx"}\NormalTok{)}
+\NormalTok{response\_central }\OtherTok{\textless{}{-}} \FunctionTok{GET}\NormalTok{(url\_central, }\FunctionTok{write\_disk}\NormalTok{(temp\_central, }\AttributeTok{overwrite =} \ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{  headers\_central }\OtherTok{\textless{}{-}} \FunctionTok{suppressMessages}\NormalTok{(}\FunctionTok{read\_excel}\NormalTok{(temp\_central, }\AttributeTok{range =} \FunctionTok{cell\_rows}\NormalTok{(}\DecValTok{3}\SpecialCharTok{:}\DecValTok{6}\NormalTok{)))}
+\NormalTok{  headers\_central }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(headers\_central, }\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{paste}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(x), }\AttributeTok{collapse =} \StringTok{" "}\NormalTok{))}
+\NormalTok{  headers\_central }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(headers\_central, }\StringTok{"med wage symbol"}\NormalTok{)}
+\NormalTok{  data\_central }\OtherTok{\textless{}{-}} \FunctionTok{suppressMessages}\NormalTok{(}\FunctionTok{read\_excel}\NormalTok{(temp\_central, }\AttributeTok{skip =} \DecValTok{5}\NormalTok{))}
+  \FunctionTok{colnames}\NormalTok{(data\_central) }\OtherTok{\textless{}{-}}\NormalTok{ headers\_central[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{12}\NormalTok{]}
+\NormalTok{  rows\_all\_na\_central }\OtherTok{\textless{}{-}} \FunctionTok{rowSums}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(data\_central)) }\SpecialCharTok{==} \FunctionTok{ncol}\NormalTok{(data\_central)}
+\NormalTok{  first\_all\_na\_row\_central }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(rows\_all\_na\_central)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{    data\_central }\OtherTok{\textless{}{-}}\NormalTok{ data\_central[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{(first\_all\_na\_row\_central }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{), ]}
+\NormalTok{  data\_central}\SpecialCharTok{$}\NormalTok{jobsohioregion }\OtherTok{\textless{}{-}} \StringTok{"Central"}
+
+
+
+\CommentTok{\# Process West region\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}
+\NormalTok{temp\_west }\OtherTok{\textless{}{-}} \FunctionTok{tempfile}\NormalTok{(}\AttributeTok{fileext =} \StringTok{".xlsx"}\NormalTok{)}
+\NormalTok{response\_west }\OtherTok{\textless{}{-}} \FunctionTok{GET}\NormalTok{(url\_west, }\FunctionTok{write\_disk}\NormalTok{(temp\_west, }\AttributeTok{overwrite =} \ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{  headers\_west }\OtherTok{\textless{}{-}} \FunctionTok{suppressMessages}\NormalTok{(}\FunctionTok{read\_excel}\NormalTok{(temp\_west, }\AttributeTok{range =} \FunctionTok{cell\_rows}\NormalTok{(}\DecValTok{3}\SpecialCharTok{:}\DecValTok{6}\NormalTok{)))}
+\NormalTok{  headers\_west }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(headers\_west, }\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{paste}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(x), }\AttributeTok{collapse =} \StringTok{" "}\NormalTok{))}
+\NormalTok{  headers\_west }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(headers\_west, }\StringTok{"med wage symbol"}\NormalTok{)}
+\NormalTok{  data\_west }\OtherTok{\textless{}{-}} \FunctionTok{suppressMessages}\NormalTok{(}\FunctionTok{read\_excel}\NormalTok{(temp\_west, }\AttributeTok{skip =} \DecValTok{5}\NormalTok{))}
+  \FunctionTok{colnames}\NormalTok{(data\_west) }\OtherTok{\textless{}{-}}\NormalTok{ headers\_west[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{12}\NormalTok{]}
+\NormalTok{  rows\_all\_na\_west }\OtherTok{\textless{}{-}} \FunctionTok{rowSums}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(data\_west)) }\SpecialCharTok{==} \FunctionTok{ncol}\NormalTok{(data\_west)}
+\NormalTok{  first\_all\_na\_row\_west }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(rows\_all\_na\_west)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{    data\_west }\OtherTok{\textless{}{-}}\NormalTok{ data\_west[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{(first\_all\_na\_row\_west }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{), ]}
+\NormalTok{  data\_west}\SpecialCharTok{$}\NormalTok{jobsohioregion }\OtherTok{\textless{}{-}} \StringTok{"West"}
+
+
+
+\CommentTok{\# Process Southeast region\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}
+\NormalTok{temp\_southeast }\OtherTok{\textless{}{-}} \FunctionTok{tempfile}\NormalTok{(}\AttributeTok{fileext =} \StringTok{".xlsx"}\NormalTok{)}
+\NormalTok{response\_southeast }\OtherTok{\textless{}{-}} \FunctionTok{GET}\NormalTok{(url\_southeast, }\FunctionTok{write\_disk}\NormalTok{(temp\_southeast, }\AttributeTok{overwrite =} \ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{  headers\_southeast }\OtherTok{\textless{}{-}} \FunctionTok{suppressMessages}\NormalTok{(}\FunctionTok{read\_excel}\NormalTok{(temp\_southeast, }\AttributeTok{range =} \FunctionTok{cell\_rows}\NormalTok{(}\DecValTok{3}\SpecialCharTok{:}\DecValTok{6}\NormalTok{)))}
+\NormalTok{  headers\_southeast }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(headers\_southeast, }\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{paste}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(x), }\AttributeTok{collapse =} \StringTok{" "}\NormalTok{))}
+\NormalTok{  headers\_southeast }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(headers\_southeast, }\StringTok{"med wage symbol"}\NormalTok{)}
+\NormalTok{  data\_southeast }\OtherTok{\textless{}{-}} \FunctionTok{suppressMessages}\NormalTok{(}\FunctionTok{read\_excel}\NormalTok{(temp\_southeast, }\AttributeTok{skip =} \DecValTok{5}\NormalTok{))}
+  \FunctionTok{colnames}\NormalTok{(data\_southeast) }\OtherTok{\textless{}{-}}\NormalTok{ headers\_southeast[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{12}\NormalTok{]}
+\NormalTok{  rows\_all\_na\_southeast }\OtherTok{\textless{}{-}} \FunctionTok{rowSums}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(data\_southeast)) }\SpecialCharTok{==} \FunctionTok{ncol}\NormalTok{(data\_southeast)}
+\NormalTok{  first\_all\_na\_row\_southeast }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(rows\_all\_na\_southeast)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{    data\_southeast }\OtherTok{\textless{}{-}}\NormalTok{ data\_southeast[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{(first\_all\_na\_row\_southeast }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{), ]}
+\NormalTok{  data\_southeast}\SpecialCharTok{$}\NormalTok{jobsohioregion }\OtherTok{\textless{}{-}} \StringTok{"Southeast"}
+
+
+\CommentTok{\# Process Northwest region\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}
+\NormalTok{temp\_northwest }\OtherTok{\textless{}{-}} \FunctionTok{tempfile}\NormalTok{(}\AttributeTok{fileext =} \StringTok{".xlsx"}\NormalTok{)}
+\NormalTok{response\_northwest }\OtherTok{\textless{}{-}} \FunctionTok{GET}\NormalTok{(url\_northwest, }\FunctionTok{write\_disk}\NormalTok{(temp\_northwest, }\AttributeTok{overwrite =} \ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{  headers\_northwest }\OtherTok{\textless{}{-}} \FunctionTok{suppressMessages}\NormalTok{(}\FunctionTok{read\_excel}\NormalTok{(temp\_northwest, }\AttributeTok{range =} \FunctionTok{cell\_rows}\NormalTok{(}\DecValTok{3}\SpecialCharTok{:}\DecValTok{6}\NormalTok{)))}
+\NormalTok{  headers\_northwest }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(headers\_northwest, }\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{paste}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(x), }\AttributeTok{collapse =} \StringTok{" "}\NormalTok{))}
+\NormalTok{  headers\_northwest }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(headers\_northwest, }\StringTok{"med wage symbol"}\NormalTok{)}
+\NormalTok{  data\_northwest }\OtherTok{\textless{}{-}} \FunctionTok{suppressMessages}\NormalTok{(}\FunctionTok{read\_excel}\NormalTok{(temp\_northwest, }\AttributeTok{skip =} \DecValTok{5}\NormalTok{))}
+  \FunctionTok{colnames}\NormalTok{(data\_northwest) }\OtherTok{\textless{}{-}}\NormalTok{ headers\_northwest[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{12}\NormalTok{]}
+\NormalTok{  rows\_all\_na\_northwest }\OtherTok{\textless{}{-}} \FunctionTok{rowSums}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(data\_northwest)) }\SpecialCharTok{==} \FunctionTok{ncol}\NormalTok{(data\_northwest)}
+\NormalTok{  first\_all\_na\_row\_northwest }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(rows\_all\_na\_northwest)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{    data\_northwest }\OtherTok{\textless{}{-}}\NormalTok{ data\_northwest[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{(first\_all\_na\_row\_northwest }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{), ]}
+\NormalTok{  data\_northwest}\SpecialCharTok{$}\NormalTok{jobsohioregion }\OtherTok{\textless{}{-}} \StringTok{"Northwest"}
+
+
+
+\CommentTok{\# Process Southwest region\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}
+\NormalTok{temp\_southwest }\OtherTok{\textless{}{-}} \FunctionTok{tempfile}\NormalTok{(}\AttributeTok{fileext =} \StringTok{".xlsx"}\NormalTok{)}
+\NormalTok{response\_southwest }\OtherTok{\textless{}{-}} \FunctionTok{GET}\NormalTok{(url\_southwest, }\FunctionTok{write\_disk}\NormalTok{(temp\_southwest, }\AttributeTok{overwrite =} \ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{  headers\_southwest }\OtherTok{\textless{}{-}} \FunctionTok{suppressMessages}\NormalTok{(}\FunctionTok{read\_excel}\NormalTok{(temp\_southwest, }\AttributeTok{range =} \FunctionTok{cell\_rows}\NormalTok{(}\DecValTok{3}\SpecialCharTok{:}\DecValTok{6}\NormalTok{)))}
+\NormalTok{  headers\_southwest }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(headers\_southwest, }\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{paste}\NormalTok{(}\FunctionTok{na.omit}\NormalTok{(x), }\AttributeTok{collapse =} \StringTok{" "}\NormalTok{))}
+\NormalTok{  headers\_southwest }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(headers\_southwest, }\StringTok{"med wage symbol"}\NormalTok{)}
+\NormalTok{  data\_southwest }\OtherTok{\textless{}{-}} \FunctionTok{suppressMessages}\NormalTok{(}\FunctionTok{read\_excel}\NormalTok{(temp\_southwest, }\AttributeTok{skip =} \DecValTok{5}\NormalTok{))}
+  \FunctionTok{colnames}\NormalTok{(data\_southwest) }\OtherTok{\textless{}{-}}\NormalTok{ headers\_southwest[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{12}\NormalTok{]}
+\NormalTok{  rows\_all\_na\_southwest }\OtherTok{\textless{}{-}} \FunctionTok{rowSums}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(data\_southwest)) }\SpecialCharTok{==} \FunctionTok{ncol}\NormalTok{(data\_southwest)}
+\NormalTok{  first\_all\_na\_row\_southwest }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(rows\_all\_na\_southwest)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{    data\_southwest }\OtherTok{\textless{}{-}}\NormalTok{ data\_southwest[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{(first\_all\_na\_row\_southwest }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{), ]}
+\NormalTok{  data\_southwest}\SpecialCharTok{$}\NormalTok{jobsohioregion }\OtherTok{\textless{}{-}} \StringTok{"Southwest"}
+
+\CommentTok{\# Combine all region datasets into a single data frame}
+\NormalTok{lmi\_oews }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(data\_northeast, data\_central, data\_west, data\_southeast, data\_northwest, data\_southwest)}
+\CommentTok{\#OKAY! all Regions loaded.}
+
+
+
+
+\CommentTok{\#Ohio overall data\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}
+\CommentTok{\# Define the column names manually, including the new \textquotesingle{}median\_wage\_symbol\textquotesingle{}. This is because I cannot get the same method as the regions to work for Ohio overall, ran out of time. }
+\NormalTok{column\_names }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \StringTok{"soc\_code"}\NormalTok{,                    }\CommentTok{\# SOC Code}
+  \StringTok{"soc\_lmi\_title"}\NormalTok{,               }\CommentTok{\# Occupational Title}
+  \StringTok{"employment"}\NormalTok{,                  }\CommentTok{\# Employment* 2020 Annual}
+  \StringTok{"projected\_2030"}\NormalTok{,              }\CommentTok{\# 2030 Projected}
+  \StringTok{"change\_employment"}\NormalTok{,           }\CommentTok{\# Change in Employment 2020{-}2030}
+  \StringTok{"percent\_change"}\NormalTok{,              }\CommentTok{\# Percent}
+  \StringTok{"annual\_openings\_growth"}\NormalTok{,      }\CommentTok{\# Annual Openings Growth}
+  \StringTok{"exits"}\NormalTok{,                       }\CommentTok{\# Exits}
+  \StringTok{"transfers"}\NormalTok{,                   }\CommentTok{\# Transfers}
+  \StringTok{"total\_openings"}\NormalTok{,              }\CommentTok{\# Total}
+  \StringTok{"median\_wage"}\NormalTok{,                 }\CommentTok{\# Median Wage May 2021}
+  \StringTok{"median\_wage\_symbol"}\NormalTok{,          }\CommentTok{\# med wage symbol}
+  \StringTok{"Typical Education Needed for Entry"}\NormalTok{,    }\CommentTok{\# Not used in the select list}
+  \StringTok{"Work Experience in a Related Occupation"}\NormalTok{,    }\CommentTok{\# Not used in the select list}
+  \StringTok{"Typical On{-}The{-}Job Training Needed to Attain Competency"} \CommentTok{\# Not used in the select list}
+\NormalTok{)}
+
+
+\CommentTok{\# Read the data from the Excel file, skipping the first three rows. I could not get the url to read in the same way....so I just downloaded this one. https://view.officeapps.live.com/op/view.aspx?src=https\%3A\%2F\%2Fohiolmi.com\%2F\_docs\%2FPROJ\%2FOhio\%2FOccOH30.xlsx\&wdOrigin=BROWSELINK}
+\NormalTok{ohio\_data }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"./data/lmi{-}data/OccOH30\_raw.xlsx"}\NormalTok{), }
+                        \AttributeTok{sheet =} \StringTok{"Occupational Detail"}\NormalTok{, }\AttributeTok{skip =} \DecValTok{3}\NormalTok{, }\AttributeTok{col\_names =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## New names:
+## * `` -> `...1`
+## * `` -> `...2`
+## * `` -> `...3`
+## * `` -> `...4`
+## * `` -> `...5`
+## * `` -> `...6`
+## * `` -> `...7`
+## * `` -> `...8`
+## * `` -> `...9`
+## * `` -> `...10`
+## * `` -> `...11`
+## * `` -> `...12`
+## * `` -> `...13`
+## * `` -> `...14`
+## * `` -> `...15`
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ohio\_data }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(ohio\_data)}
+\CommentTok{\# Assign the manually defined column names to the data, these are defined above}
+\FunctionTok{colnames}\NormalTok{(ohio\_data) }\OtherTok{\textless{}{-}}\NormalTok{ column\_names}
+\CommentTok{\# Add a new column \textquotesingle{}jobsohioregion\textquotesingle{} with all values set to \textquotesingle{}Ohio\textquotesingle{}, this will give us the same manually added data column as the previous region code{-}chunks}
+\NormalTok{ohio\_data }\OtherTok{\textless{}{-}}\NormalTok{ ohio\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{jobsohioregion =} \StringTok{\textquotesingle{}Ohio\textquotesingle{}}\NormalTok{)}
+
+
+
+
+\CommentTok{\#Combine Ohio and Region Data\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}
+\CommentTok{\# Ensure consistent column names and types for \textasciigrave{}ohio\_data\_trimmed\textasciigrave{}}
+\NormalTok{ohio\_data\_trimmed }\OtherTok{\textless{}{-}}\NormalTok{ ohio\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}
+\NormalTok{    soc\_code, soc\_lmi\_title, employment, projected\_2030, }
+\NormalTok{    change\_employment, percent\_change, annual\_openings\_growth, }
+\NormalTok{    exits, transfers, total\_openings, median\_wage, }
+\NormalTok{    median\_wage\_symbol, jobsohioregion}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{employment =} \FunctionTok{as.numeric}\NormalTok{(employment),  }\CommentTok{\# Convert to numeric}
+    \AttributeTok{change\_employment =} \FunctionTok{as.numeric}\NormalTok{(change\_employment),  }
+    \AttributeTok{median\_wage =} \FunctionTok{as.numeric}\NormalTok{(median\_wage), }
+    \AttributeTok{projected\_2030 =} \FunctionTok{as.numeric}\NormalTok{(projected\_2030), }
+    \AttributeTok{percent\_change =} \FunctionTok{as.numeric}\NormalTok{(percent\_change),}
+    \AttributeTok{annual\_openings\_growth =} \FunctionTok{as.numeric}\NormalTok{(annual\_openings\_growth),}
+    \AttributeTok{exits =} \FunctionTok{as.numeric}\NormalTok{(exits),}
+    \AttributeTok{transfers =} \FunctionTok{as.numeric}\NormalTok{(transfers),}
+    \AttributeTok{total\_openings =} \FunctionTok{as.numeric}\NormalTok{(total\_openings)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: There were 9 warnings in `mutate()`.
+## The first warning was:
+## i In argument: `employment = as.numeric(employment)`.
+## Caused by warning:
+## ! NAs introduced by coercion
+## i Run `dplyr::last_dplyr_warnings()` to see the 8 remaining warnings.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Ensure column names and types match for \textasciigrave{}lmi\_oews\textasciigrave{}}
+\NormalTok{lmi\_oews }\OtherTok{\textless{}{-}}\NormalTok{ lmi\_oews }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rename}\NormalTok{(}
+    \AttributeTok{soc\_code =} \StringTok{\textasciigrave{}}\AttributeTok{SOC Code}\StringTok{\textasciigrave{}}\NormalTok{,}
+    \AttributeTok{soc\_lmi\_title =} \StringTok{\textasciigrave{}}\AttributeTok{Occupational Title}\StringTok{\textasciigrave{}}\NormalTok{,}
+    \AttributeTok{employment =} \StringTok{\textasciigrave{}}\AttributeTok{Employment* 2020 Annual}\StringTok{\textasciigrave{}}\NormalTok{,}
+    \AttributeTok{projected\_2030 =} \StringTok{\textasciigrave{}}\AttributeTok{2030 Projected}\StringTok{\textasciigrave{}}\NormalTok{,}
+    \AttributeTok{change\_employment =} \StringTok{\textasciigrave{}}\AttributeTok{Change in Employment 2020{-}2030}\StringTok{\textasciigrave{}}\NormalTok{,}
+    \AttributeTok{percent\_change =} \StringTok{\textasciigrave{}}\AttributeTok{Percent}\StringTok{\textasciigrave{}}\NormalTok{,}
+    \AttributeTok{annual\_openings\_growth =} \StringTok{\textasciigrave{}}\AttributeTok{Annual Openings Growth}\StringTok{\textasciigrave{}}\NormalTok{,}
+    \AttributeTok{exits =} \StringTok{\textasciigrave{}}\AttributeTok{Exits}\StringTok{\textasciigrave{}}\NormalTok{,}
+    \AttributeTok{transfers =} \StringTok{\textasciigrave{}}\AttributeTok{Transfers}\StringTok{\textasciigrave{}}\NormalTok{,}
+    \AttributeTok{total\_openings =} \StringTok{\textasciigrave{}}\AttributeTok{Total}\StringTok{\textasciigrave{}}\NormalTok{,}
+    \AttributeTok{median\_wage =} \StringTok{\textasciigrave{}}\AttributeTok{Median Wage May 2021}\StringTok{\textasciigrave{}}\NormalTok{,}
+    \AttributeTok{median\_wage\_symbol =} \StringTok{\textasciigrave{}}\AttributeTok{med wage symbol}\StringTok{\textasciigrave{}}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{employment =} \FunctionTok{as.numeric}\NormalTok{(employment),  }\CommentTok{\# Convert to numeric}
+    \AttributeTok{projected\_2030 =} \FunctionTok{as.numeric}\NormalTok{(projected\_2030),}
+    \AttributeTok{change\_employment =} \FunctionTok{as.numeric}\NormalTok{(change\_employment),}
+    \AttributeTok{percent\_change =} \FunctionTok{as.numeric}\NormalTok{(percent\_change),}
+    \AttributeTok{annual\_openings\_growth =} \FunctionTok{as.numeric}\NormalTok{(annual\_openings\_growth),}
+    \AttributeTok{exits =} \FunctionTok{as.numeric}\NormalTok{(exits),}
+    \AttributeTok{transfers =} \FunctionTok{as.numeric}\NormalTok{(transfers),}
+    \AttributeTok{total\_openings =} \FunctionTok{as.numeric}\NormalTok{(total\_openings),}
+    \AttributeTok{median\_wage =} \FunctionTok{as.numeric}\NormalTok{(median\_wage)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: There was 1 warning in `mutate()`.
+## i In argument: `median_wage = as.numeric(median_wage)`.
+## Caused by warning:
+## ! NAs introduced by coercion
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Ensure standardized column names for both data frames}
+\FunctionTok{colnames}\NormalTok{(ohio\_data\_trimmed) }\OtherTok{\textless{}{-}} \FunctionTok{tolower}\NormalTok{(}\FunctionTok{trimws}\NormalTok{(}\FunctionTok{colnames}\NormalTok{(ohio\_data\_trimmed)))}
+\FunctionTok{colnames}\NormalTok{(lmi\_oews) }\OtherTok{\textless{}{-}} \FunctionTok{tolower}\NormalTok{(}\FunctionTok{trimws}\NormalTok{(}\FunctionTok{colnames}\NormalTok{(lmi\_oews)))}
+
+\CommentTok{\# Combine the two datasets}
+\NormalTok{ohio\_region\_lmi\_data }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(lmi\_oews, ohio\_data\_trimmed)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{jobsohioregion =} \FunctionTok{case\_when}\NormalTok{( }\CommentTok{\#casewhen easiest in this case}
+\NormalTok{      jobsohioregion }\SpecialCharTok{==} \StringTok{"Northwest"} \SpecialCharTok{\textasciitilde{}} \DecValTok{1}\DataTypeTok{L}\NormalTok{,}
+\NormalTok{       jobsohioregion }\SpecialCharTok{==} \StringTok{"West"} \SpecialCharTok{\textasciitilde{}} \DecValTok{2}\DataTypeTok{L}\NormalTok{,}
+\NormalTok{      jobsohioregion }\SpecialCharTok{==} \StringTok{"Southwest"} \SpecialCharTok{\textasciitilde{}} \DecValTok{3}\DataTypeTok{L}\NormalTok{,}
+\NormalTok{      jobsohioregion }\SpecialCharTok{==} \StringTok{"Northeast"} \SpecialCharTok{\textasciitilde{}} \DecValTok{4}\DataTypeTok{L}\NormalTok{,}
+\NormalTok{      jobsohioregion }\SpecialCharTok{==} \StringTok{"Central"} \SpecialCharTok{\textasciitilde{}} \DecValTok{5}\DataTypeTok{L}\NormalTok{,}
+\NormalTok{      jobsohioregion }\SpecialCharTok{==} \StringTok{"Southeast"} \SpecialCharTok{\textasciitilde{}} \DecValTok{6}\DataTypeTok{L}\NormalTok{,}
+\NormalTok{      jobsohioregion }\SpecialCharTok{==} \StringTok{"Ohio"} \SpecialCharTok{\textasciitilde{}} \DecValTok{39}\DataTypeTok{L}\NormalTok{, }\CommentTok{\#ohio to 39, check this is true for all}
+      \ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}} \ConstantTok{NA\_integer\_}  \CommentTok{\# For any unmatched regions, set to NA, should removed these or see why they occurred}
+\NormalTok{     )}
+\NormalTok{    )}
+\CommentTok{\#Will have to fix manual vs hourly wage data later on it looks like. Pay attention to the wage symbol. }
+\CommentTok{\#SAVE the data}
+\NormalTok{rda\_file\_path }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(target\_folder, }\StringTok{"ohio\_region\_lmi\_data.rda"}\NormalTok{) }\CommentTok{\#rda\textquotesingle{}s always better (I think?)}
+\FunctionTok{save}\NormalTok{(ohio\_region\_lmi\_data, }\AttributeTok{file =}\NormalTok{ rda\_file\_path)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#FOR FUTURE, ADD THE BELOW INSTRUCTIONS AND THE NEXT CHUNK\textquotesingle{}S INSTRUCTIONS TO A READ\_ME FILE}
+\CommentTok{\# IPEDS Directory data {-}{-}{-}{-}{-}}
+\CommentTok{\# https://nces.ed.gov/ipeds/use{-}the{-}data}
+\CommentTok{\# Survey Data \textgreater{} Custom Data Files}
+\CommentTok{\# Use provisional release data, continue}
+\CommentTok{\# Step 1 {-} Select Instituitions:}
+\CommentTok{\# Select "By Variables", "Browse/Search Variables"}
+\CommentTok{\#  Institutional Characteristics, Directory Information, select most recent year and "State abbreviation", continue, continue}
+\CommentTok{\#   Under "Variable Title (Table Name)" click the link "State abbreviation {-} (17)" and check the box for Ohio, save, submit}
+\CommentTok{\# Click Continue to Step 2 {-} Select Variables}
+\CommentTok{\# + Institutional Characteristics}
+\CommentTok{\# + Directory information, response status and frequently used variables}
+\CommentTok{\# + Directory information and response status:}
+\CommentTok{\# NOT NEEDED: Institution (entity) name {-}{-} they give you this by default, and if you request it, you get it twice!}
+\CommentTok{\# Institution name alias}
+\CommentTok{\# Street address or post office box}
+\CommentTok{\# City location of institution}
+\CommentTok{\# State abbreviation}
+\CommentTok{\# ZIP code}
+\CommentTok{\# General information telephone number}
+\CommentTok{\# Institution\textquotesingle{}s internet website address}
+\CommentTok{\# Employer Identification Number}
+\CommentTok{\# Fips County code}
+\CommentTok{\# County name}
+\CommentTok{\# Longitude location of institution}
+\CommentTok{\# Latitude location of institution}
+\CommentTok{\# UNITID for merged schools}
+\CommentTok{\# Year institution was deleted from IPEDS}
+\CommentTok{\# Date institution closed}
+\CommentTok{\# Institution is active in current year}
+\CommentTok{\# + Institution Classifications:}
+\CommentTok{\# Sector of institution}
+\CommentTok{\# Level of institution}
+\CommentTok{\# Control of institution}
+\CommentTok{\# Highest level of offering}
+
+
+\CommentTok{\# Hit Continue to move on to a page listing the requested data.}
+\CommentTok{\# Select "STATA", which actually will produce a CSV but uses codes instead of value labels, which is good.}
+\CommentTok{\# .do files are also provided for each, should there be any question about value labels.}
+\CommentTok{\# Get JOR codes to attach to the IPEDS directory data}
+\FunctionTok{load}\NormalTok{(}\StringTok{\textquotesingle{}data/cross{-}walks/jobsohioregions.rda\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{ipeds\_directory }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{\textquotesingle{}data/ipeds{-}institution{-}detail/STATA\_RV\_7162021{-}493.zip\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{left\_join}\NormalTok{(jobsohioregions, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}countycd\textquotesingle{}} \OtherTok{=} \StringTok{\textquotesingle{}statefips\textquotesingle{}}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{transmute}\NormalTok{(}
+    \AttributeTok{ipeds\_code =}\NormalTok{ unitid,}
+    \AttributeTok{institutionname =}\NormalTok{ instnm,}
+    \AttributeTok{street\_address =}\NormalTok{ addr,}
+    \AttributeTok{city =}\NormalTok{ city,}
+    \AttributeTok{state =}\NormalTok{ stabbr,}
+    \AttributeTok{zip =}\NormalTok{ zip,}
+    \AttributeTok{web\_address =}\NormalTok{ webaddr,}
+    \AttributeTok{regionId =}\NormalTok{ jobsohioregion,}
+    \AttributeTok{lat =}\NormalTok{ latitude,}
+    \AttributeTok{lng =}\NormalTok{ longitud}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Multiple files in zip: reading 'STATA_RV_7162021-493.csv'
+## Rows: 296 Columns: 23
+## -- Column specification --------------------------------------------------------
+## Delimiter: ","
+## chr (10): instnm, ialias, addr, city, stabbr, zip, webaddr, ein, countynm, c...
+## dbl (13): unitid, year, gentele, countycd, longitud, latitude, newid, deathy...
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{save}\NormalTok{(ipeds\_directory, }\AttributeTok{file =} \StringTok{\textquotesingle{}data/ipeds{-}institution{-}detail/ipeds\_directory.rda\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# IPEDS Data {-}{-}{-}{-}{-}}
+\CommentTok{\# https://nces.ed.gov/ipeds/use{-}the{-}data}
+\CommentTok{\# Survey Data \textgreater{} Custom Data Files}
+\CommentTok{\# Step 1 {-} Select Instituitions:}
+\CommentTok{\# Select "By Variables", "Browse/Search Variables"}
+\CommentTok{\#  Institutional Characteristics, Directory Information, select most recent year and "State abbreviation", continue, continue}
+\CommentTok{\#   Under "Variable Title (Table Name)" click the link "State abbreviation {-} (\#\#)" and check the box for Ohio, save, submit}
+\CommentTok{\# Click Continue to Step 2 {-} Select Variables}
+\CommentTok{\# For each year wanted under Available Year(s) do:}
+\CommentTok{\#   click the year (each year refers to school year ending June 30 of that year)}
+\CommentTok{\#   Completions, Awards/degrees conferred by program (CIP), check Grand total}
+\CommentTok{\#   (repeat)}
+\CommentTok{\# Hit Continue to move on to a page listing each of the requested data sets.}
+\CommentTok{\# For each one, select "STATA", which actually will produce CSVs but uses codes instead of value labels, which is good.}
+\CommentTok{\# .do files are also provided for each, should there be any question about value labels.}
+
+
+
+\CommentTok{\#Usefull to get the remappings for award level, ie. these are the education levels. }
+\DocumentationTok{\#\# From the STATA .do file from IPEDS for 1997:}
+\CommentTok{\# label values cipcode         label\_cipcode        }
+\CommentTok{\# label define label\_awlevel         15 "Degrees/certificates total"}
+\CommentTok{\# label define label\_awlevel         12 "Degrees total", add}
+\CommentTok{\# label define label\_awlevel         3 "Associate\textquotesingle{}\textquotesingle{}s degree", add}
+\CommentTok{\# label define label\_awlevel         5 "Bachelor\textquotesingle{}\textquotesingle{}s degree", add}
+\CommentTok{\# label define label\_awlevel         7 "Master\textquotesingle{}\textquotesingle{}s degree", add}
+\CommentTok{\# label define label\_awlevel         9 "Doctor\textquotesingle{}\textquotesingle{}s degree", add}
+\CommentTok{\# label define label\_awlevel         10 "First{-}professional degree", add}
+\CommentTok{\# label define label\_awlevel         13 "Certificates below the bacculaureate total", add}
+\CommentTok{\# label define label\_awlevel         1 "Award of less than 1 academic year", add}
+\CommentTok{\# label define label\_awlevel         2 "Award of at least 1 but less than 2 academic years", add}
+\CommentTok{\# label define label\_awlevel         4 "Award of at least 2 but less than 4 academic years", add}
+\CommentTok{\# label define label\_awlevel         14 "Certificates above the bacculaureate total", add}
+\CommentTok{\# label define label\_awlevel         6 "Postbaccalaureate certificate", add}
+\CommentTok{\# label define label\_awlevel         8 "Post{-}master\textquotesingle{}\textquotesingle{}s certificate", add}
+\CommentTok{\# label define label\_awlevel         11 "First{-}professional certificate", add}
+
+\CommentTok{\#Using the above category definitions from the STATA file you can download from IPEDS, let\textquotesingle{}s remap to levels}
+\CommentTok{\#so we actually know what is goin on}
+\NormalTok{ipeds\_degree\_remapping }\OtherTok{\textless{}{-}} \FunctionTok{tribble}\NormalTok{(}
+  \SpecialCharTok{\textasciitilde{}}\NormalTok{awlevel, }\SpecialCharTok{\textasciitilde{}}\NormalTok{degree\_group\_logord,}
+  \StringTok{\textquotesingle{}1\textquotesingle{}}\NormalTok{,        }\DecValTok{1}\DataTypeTok{L}\NormalTok{,}
+  \StringTok{\textquotesingle{}2\textquotesingle{}}\NormalTok{,        }\DecValTok{1}\DataTypeTok{L}\NormalTok{,}
+  \StringTok{\textquotesingle{}3\textquotesingle{}}\NormalTok{,        }\DecValTok{2}\DataTypeTok{L}\NormalTok{,}
+  \StringTok{\textquotesingle{}4\textquotesingle{}}\NormalTok{,        }\DecValTok{1}\DataTypeTok{L}\NormalTok{,}
+  \StringTok{\textquotesingle{}5\textquotesingle{}}\NormalTok{,        }\DecValTok{3}\DataTypeTok{L}\NormalTok{,}
+  \StringTok{\textquotesingle{}6\textquotesingle{}}\NormalTok{,        }\DecValTok{1}\DataTypeTok{L}\NormalTok{,}
+  \StringTok{\textquotesingle{}7\textquotesingle{}}\NormalTok{,        }\DecValTok{4}\DataTypeTok{L}\NormalTok{,}
+  \StringTok{\textquotesingle{}8\textquotesingle{}}\NormalTok{,        }\DecValTok{5}\DataTypeTok{L}\NormalTok{,    }\CommentTok{\# grad certificate, has not been included in the Supply Tool}
+  \StringTok{\textquotesingle{}9\textquotesingle{}}\NormalTok{,        }\DecValTok{4}\DataTypeTok{L}\NormalTok{,}
+  \StringTok{\textquotesingle{}10\textquotesingle{}}\NormalTok{,         }\DecValTok{4}\DataTypeTok{L}\NormalTok{,}
+  \StringTok{\textquotesingle{}11\textquotesingle{}}\NormalTok{,         }\DecValTok{5}\DataTypeTok{L}\NormalTok{,    }\CommentTok{\# grad certificate, has not been included in the Supply Tool}
+  \StringTok{\textquotesingle{}12\textquotesingle{}}\NormalTok{,       }\ConstantTok{NA}\NormalTok{,    }\CommentTok{\# subtotals}
+  \StringTok{\textquotesingle{}13\textquotesingle{}}\NormalTok{,       }\ConstantTok{NA}\NormalTok{,    }\CommentTok{\# subtotals}
+  \StringTok{\textquotesingle{}14\textquotesingle{}}\NormalTok{,       }\ConstantTok{NA}\NormalTok{,    }\CommentTok{\# subtotals}
+  \StringTok{\textquotesingle{}15\textquotesingle{}}\NormalTok{,       }\ConstantTok{NA}\NormalTok{,    }\CommentTok{\# subtotals}
+  \StringTok{\textquotesingle{}17\textquotesingle{}}\NormalTok{,         }\DecValTok{4}\DataTypeTok{L}\NormalTok{,}
+  \StringTok{\textquotesingle{}18\textquotesingle{}}\NormalTok{,         }\DecValTok{4}\DataTypeTok{L}\NormalTok{,}
+  \StringTok{\textquotesingle{}19\textquotesingle{}}\NormalTok{,         }\DecValTok{4}\DataTypeTok{L}
+\NormalTok{)}
+  
+\CommentTok{\# Read files, keep only 6{-}digit CIP, address some variable name changes (crace24/ctotalt)}
+\CommentTok{\# Using default character because it is easier to start from there, keep CIP codes correct,}
+
+\CommentTok{\#First, use list.files to find the .zip files that download from IPEDS, better to store them as .zip, because they are large. If we downloaded as above, then we should only have Ohio. }
+\NormalTok{ipeds\_completions }\OtherTok{\textless{}{-}} \FunctionTok{list.files}\NormalTok{(}\StringTok{\textquotesingle{}data/ipeds{-}completions\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}.*zip$\textquotesingle{}}\NormalTok{, }\AttributeTok{full.names =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}  
+  \FunctionTok{map\_dfr}\NormalTok{(}\SpecialCharTok{\textasciitilde{}} \FunctionTok{read\_csv}\NormalTok{(., }\AttributeTok{col\_types =} \FunctionTok{cols}\NormalTok{(}\AttributeTok{.default =} \FunctionTok{col\_character}\NormalTok{()))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(}\FunctionTok{nchar}\NormalTok{(cipcode) }\SpecialCharTok{==} \DecValTok{7}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}  \CommentTok{\# 7 because of the "." in the number, e.g. "15.0101"}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{grads =} \FunctionTok{as.integer}\NormalTok{(ctotalt)) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\#this is the grads count column}
+  \FunctionTok{left\_join}\NormalTok{(ipeds\_degree\_remapping, }\AttributeTok{by =} \StringTok{\textquotesingle{}awlevel\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(degree\_group\_logord) }\SpecialCharTok{\&}\NormalTok{ grads }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# drop subtotals and zero rows}
+  \FunctionTok{group\_by}\NormalTok{(unitid, year, cipcode, degree\_group\_logord) }\SpecialCharTok{\%\textgreater{}\%}  \CommentTok{\# this is for combining majornum = 1 and majornum = 2...i.e we count both majors for supply. unitid is the institution. }
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{graduates =} \FunctionTok{sum}\NormalTok{(grads), }\AttributeTok{.groups =} \StringTok{\textquotesingle{}drop\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(}\FunctionTok{transmute}\NormalTok{(ipeds\_directory, }\AttributeTok{unitid =} \FunctionTok{as.character}\NormalTok{(ipeds\_code), regionId), }\AttributeTok{by =} \StringTok{\textquotesingle{}unitid\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\AttributeTok{ipeds\_code =}\NormalTok{ unitid, }
+         \AttributeTok{cip\_code =}\NormalTok{ cipcode, }
+\NormalTok{         degree\_group\_logord, }
+         \AttributeTok{academic\_year =}\NormalTok{ year, }
+         \AttributeTok{jobsohioregion =}\NormalTok{ regionId, }
+\NormalTok{         graduates)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Multiple files in zip: reading 'STATA_RV_3172022-1009.csv'
+## Multiple files in zip: reading 'STATA_RV_3172022-1030.csv'
+## Multiple files in zip: reading 'STATA_RV_3172022-141.csv'
+## Multiple files in zip: reading 'STATA_RV_3172022-185.csv'
+## Multiple files in zip: reading 'STATA_RV_3172022-301.csv'
+## Multiple files in zip: reading 'STATA_RV_3172022-502.csv'
+## Multiple files in zip: reading 'STATA_RV_3172022-620.csv'
+## Multiple files in zip: reading 'STATA_RV_3172022-893.csv'
+## Multiple files in zip: reading 'STATA_RV_3172022-949.csv'
+## Multiple files in zip: reading 'STATA_RV_3172022-974.csv'
+## Multiple files in zip: reading 'STATA_RV_582024-207.csv'
+## Multiple files in zip: reading 'STATA_RV_962022-18.csv'
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{save}\NormalTok{(ipeds\_completions, }\AttributeTok{file =} \StringTok{\textquotesingle{}data/ipeds{-}completions/ipeds\_completions.rda\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\#\#End OF data Import, now need to Combine according to CIP-SOC
+Crosswalk
+
+Final Datasets Created:
+
+ohio\_region\_lmi\_data: Occupation demand dataset that includes six
+Ohio regions and statewide data (jobsohioregion coded numerically for
+each region).
+
+Main Variables: -soc\_code: Standard Occupational Classification code.
+-soc\_lmi\_title: Occupation title based on LMI. -employment: Employment
+count for 2020. -projected\_2030: Projected employment count for 2030.
+-change\_employment: Change in employment from 2020 to 2030.
+-percent\_change: Percentage change in employment.
+-annual\_openings\_growth: Annual growth in job openings. -median\_wage:
+Median wage in 2021. -jobsohioregion: Region identifier (1-6 for
+regions, 39 for Ohio).
+
+ipeds\_completions.rda:IPEDS completions data for institutions in Ohio,
+linked to LMI regions.
+
+Main Variables: -ipeds\_code: Unique identifier for institutions.
+-cip\_code: Classification of Instructional Programs code for program
+areas. -degree\_group\_logord: Ordinal representation of degree levels
+(e.g., 1 for -certificates, 2 for associate degrees, 3 for bachelor's
+degrees). -academic\_year: Year of data collection. -jobsohioregion:
+Region identifier linked to LMI regions. -graduates: Number of graduates
+in a given program and year.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#read in crosswalk and do second sheet, which is CIP{-}SOC}
+\NormalTok{cip\_soc }\OtherTok{\textless{}{-}} \FunctionTok{read\_xlsx}\NormalTok{(}\StringTok{"data/cross{-}walks/CIP2020\_SOC2018\_Crosswalk.xlsx"}\NormalTok{, }\AttributeTok{sheet =} \StringTok{\textquotesingle{}CIP{-}SOC\textquotesingle{}}\NormalTok{)}
+\NormalTok{soc\_cip }\OtherTok{\textless{}{-}} \FunctionTok{read\_xlsx}\NormalTok{(}\StringTok{"data/cross{-}walks/CIP2020\_SOC2018\_Crosswalk.xlsx"}\NormalTok{, }\AttributeTok{sheet =} \StringTok{\textquotesingle{}SOC{-}CIP\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\#Adjust the yearly median wage to hourly from LMI}
+\CommentTok{\# Convert median wage from yearly to hourly if the symbol is "**". It\textquotesingle{}s weird and there is prbably}
+\CommentTok{\#a more efficient way to do this, but I am just using mutate and gsub for each case. If it is a yearly }
+\CommentTok{\#symbol, I am calculaing hourly wage from yearly by assuming 2080 hours in the year. }
+\NormalTok{lmi\_oews }\OtherTok{\textless{}{-}}\NormalTok{ ohio\_region\_lmi\_data}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{jobsohioregion =} \FunctionTok{as.character}\NormalTok{(jobsohioregion))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{median\_wage =} \FunctionTok{gsub}\NormalTok{(}\StringTok{"[\^{}0{-}9.]"}\NormalTok{, }\StringTok{""}\NormalTok{, median\_wage))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{median\_wage\_symbol =} \FunctionTok{gsub}\NormalTok{(}\StringTok{"[\^{}0{-}9.]"}\NormalTok{, }\StringTok{""}\NormalTok{, median\_wage\_symbol))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{median\_wage =} \FunctionTok{as.numeric}\NormalTok{(median\_wage)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{median\_wage\_symbol =} \FunctionTok{trimws}\NormalTok{(median\_wage\_symbol))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{median\_wage =} \FunctionTok{case\_when}\NormalTok{(}
+       \SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(median\_wage\_symbol) }\SpecialCharTok{\&}\NormalTok{ median\_wage\_symbol }\SpecialCharTok{==} \StringTok{"**"} \SpecialCharTok{\textasciitilde{}}\NormalTok{ median\_wage }\SpecialCharTok{/} \DecValTok{2080}\NormalTok{,}\CommentTok{\# Convert from yearly to hourly for \textquotesingle{}**\textquotesingle{}}
+      \SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(median\_wage\_symbol) }\SpecialCharTok{\&}\NormalTok{ median\_wage\_symbol }\SpecialCharTok{==} \StringTok{"††"} \SpecialCharTok{\textasciitilde{}}\NormalTok{ median\_wage }\SpecialCharTok{/} \DecValTok{2080}\NormalTok{, }\CommentTok{\# Convert from statewide annual wage (\textquotesingle{}††\textquotesingle{})}
+      \SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(median\_wage\_symbol) }\SpecialCharTok{\&}\NormalTok{ median\_wage\_symbol }\SpecialCharTok{==} \StringTok{"†"} \SpecialCharTok{\textasciitilde{}}\NormalTok{ median\_wage,}\CommentTok{\# Statewide hourly wage (\textquotesingle{}†\textquotesingle{}), no conversion}
+      \SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(median\_wage\_symbol) }\SpecialCharTok{\&}\NormalTok{ median\_wage\_symbol }\SpecialCharTok{==} \StringTok{"▲"} \SpecialCharTok{\textasciitilde{}} \ConstantTok{NA\_real\_}\NormalTok{,  }\CommentTok{\# Wage not available (\textquotesingle{}▲\textquotesingle{}), set to NA}
+\NormalTok{      median\_wage }\SpecialCharTok{\textgreater{}=} \DecValTok{1000} \SpecialCharTok{\textasciitilde{}}\NormalTok{ median\_wage }\SpecialCharTok{/} \DecValTok{2080}\NormalTok{, }\CommentTok{\#final check for over $1000 an hour, we maybe should just remove these, but I am assuming they are yearly. }
+      \ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}}\NormalTok{ median\_wage  }\CommentTok{\# Keep as is for other cases}
+\NormalTok{    )}
+\NormalTok{  )}
+\CommentTok{\#run it and it looks like for our data, 96$ an hour is the max, makes sense. Those making much more \#probably don\textquotesingle{}t have a reported salary as such.I also know the sate supresses data on very high income individuals, but that would not come up in the median wage anyways. }
+
+\CommentTok{\# 2. Combine and De{-}duplicate Graduate Data \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}
+\NormalTok{graduates\_data }\OtherTok{\textless{}{-}}\NormalTok{ ipeds\_completions}\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{filter}\NormalTok{(academic\_year }\SpecialCharTok{\textgreater{}=} \DecValTok{2010}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\#here, academic year is the regular school year, so around Sept{-}May. This just let\textquotesingle{}s us avoid pre{-}2010 codes (in my mind, need to check this)}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{academic\_year =} \FunctionTok{as.integer}\NormalTok{(academic\_year), }\AttributeTok{jobsohioregion =} \FunctionTok{as.character}\NormalTok{(jobsohioregion))}
+
+\CommentTok{\# 3. Aggregate Data by Region and State\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}
+\CommentTok{\# Summarize graduates by region}
+\NormalTok{graduates\_regions }\OtherTok{\textless{}{-}}\NormalTok{ graduates\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(jobsohioregion, cip\_code, degree\_group\_logord, academic\_year)}\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#this is a count of graduates for each program, for each degree type, for each region, for each year.}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{graduates =} \FunctionTok{sum}\NormalTok{(graduates, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }\AttributeTok{.groups =} \StringTok{"drop"}\NormalTok{)}
+
+\CommentTok{\# Summarize graduates for the entire state, so same as prior chunk, but for the state overall}
+\NormalTok{graduates\_statewide }\OtherTok{\textless{}{-}}\NormalTok{ graduates\_regions }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(cip\_code, degree\_group\_logord, academic\_year) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{graduates =} \FunctionTok{sum}\NormalTok{(graduates, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }\AttributeTok{.groups =} \StringTok{"drop"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{jobsohioregion =} \StringTok{"39"}\NormalTok{)}
+
+\CommentTok{\# Combine regional and statewide data}
+\NormalTok{state\_region\_graduates }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(graduates\_regions, graduates\_statewide)}
+\FunctionTok{rm}\NormalTok{(graduates\_regions, graduates\_statewide) }\CommentTok{\#don\textquotesingle{}t save the old versions}
+
+
+\CommentTok{\# 5. Join Graduate Data with CIP{-}SOC Mappings\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}
+\CommentTok{\# Step 1: Standardize column names in both datasets}
+\NormalTok{cip\_soc }\OtherTok{\textless{}{-}}\NormalTok{ cip\_soc }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cip\_code =} \FunctionTok{trimws}\NormalTok{(CIP2020Code))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{soc\_code =} \FunctionTok{trimws}\NormalTok{(SOC2018Code))}
+\NormalTok{soc\_cip }\OtherTok{\textless{}{-}}\NormalTok{ soc\_cip }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cip\_code =} \FunctionTok{trimws}\NormalTok{(CIP2020Code))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{soc\_code =} \FunctionTok{trimws}\NormalTok{(SOC2018Code))}
+
+\NormalTok{state\_region\_graduates }\OtherTok{\textless{}{-}}\NormalTok{ state\_region\_graduates }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cip\_code =} \FunctionTok{trimws}\NormalTok{(cip\_code))}
+
+\CommentTok{\#Check for unmatched \textasciigrave{}cip\_code\textasciigrave{} values before joining}
+\NormalTok{unmatched\_cip\_codes }\OtherTok{\textless{}{-}} \FunctionTok{setdiff}\NormalTok{(state\_region\_graduates}\SpecialCharTok{$}\NormalTok{cip\_code, cip\_soc}\SpecialCharTok{$}\NormalTok{cip\_code)}
+\FunctionTok{print}\NormalTok{(unmatched\_cip\_codes)  }\CommentTok{\# Check for missing or mismatched \textasciigrave{}cip\_code\textasciigrave{} values}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "15.0503" "15.0505" "43.0106" "43.0111" "43.0116" "43.0117" "51.0808"
+##  [8] "51.1104" "51.2501" "51.3817" "43.0118" "01.0309" "19.0000" "51.2101"
+## [15] "51.2401" "51.1901"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#merge the SOC codes into our graduate data, so we have counts by all CIP{-}SOC matchings. If we want to know the supply}
+\CommentTok{\# for a specific SOC, we can sum up the graduates grouped by soc, degree, year, region. }
+\CommentTok{\#IMPORTANT TO REMEMBER, AFTER THIS STEP THEY ARE NO LONGER UNIQUE COUNTS, BUT MUST BE INTERPRITED BY THEIR GROUPING OF cip{-}soc}
+\NormalTok{aggregated\_data }\OtherTok{\textless{}{-}}\NormalTok{ state\_region\_graduates }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cip\_only\_id =} \FunctionTok{paste}\NormalTok{(cip\_code, degree\_group\_logord, academic\_year, jobsohioregion, }\AttributeTok{sep =} \StringTok{"\_"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(cip\_soc, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"cip\_code"} \OtherTok{=} \StringTok{"cip\_code"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\#join in our SOC codes, most CIP codes match to multiple SOC codes, so the number of rows will increase. IT is important to conceptualize what is happeneing in this step. }
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cip\_code\_soc\_code\_filter\_groups\_id =} \FunctionTok{paste}\NormalTok{(cip\_code, soc\_code, degree\_group\_logord, academic\_year, jobsohioregion, }\AttributeTok{sep =} \StringTok{"\_"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\#This is to keep track of the groupings, we create a uniqe id. }
+  \FunctionTok{group\_by}\NormalTok{(soc\_code, cip\_code, degree\_group\_logord, jobsohioregion, academic\_year) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{total\_graduates =} \FunctionTok{sum}\NormalTok{(graduates, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }\AttributeTok{.groups =} \StringTok{"drop"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#For each CIP{-}SOC match{-}up, we have total{-}graduates. }
+   \FunctionTok{select}\NormalTok{(cip\_code, academic\_year, jobsohioregion, degree\_group\_logord, total\_graduates, soc\_code)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in left_join(., cip_soc, by = c(cip_code = "cip_code")): Detected an unexpected many-to-many relationship between `x` and `y`.
+## i Row 1 of `x` matches multiple rows in `y`.
+## i Row 6 of `y` matches multiple rows in `x`.
+## i If a many-to-many relationship is expected, set `relationship =
+##   "many-to-many"` to silence this warning.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{nrow}\NormalTok{(aggregated\_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 253591
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#As an excersize, summarise JUST by our unique id variable, and see if we get the same number of observations}
+\CommentTok{\# aggregated\_dataII \textless{}{-} state\_region\_graduates \%\textgreater{}\%}
+\CommentTok{\#   mutate(cip\_only\_id = paste(cip\_code, degree\_group\_logord, academic\_year, jobsohioregion, sep = "\_")) \%\textgreater{}\%}
+\CommentTok{\#   left\_join(cip\_soc, by = c("cip\_code" = "cip\_code")) \%\textgreater{}\% }
+\CommentTok{\#     mutate(cip\_code\_soc\_code\_filter\_groups\_id = paste(cip\_code, soc\_code, degree\_group\_logord, academic\_year, jobsohioregion, sep = "\_")) \%\textgreater{}\% }
+\CommentTok{\#   group\_by(cip\_code\_soc\_code\_filter\_groups\_id) \%\textgreater{}\%}
+\CommentTok{\#   summarise(total\_graduates = sum(graduates, na.rm = TRUE), .groups = "drop") \%\textgreater{}\%}
+\CommentTok{\#    select(cip\_code\_soc\_code\_filter\_groups\_id, total\_graduates)}
+\CommentTok{\# nrow(aggregated\_dataII)}
+
+
+\CommentTok{\# Calculate Total CIP Graduates per SOC, Region, and Degree Group \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}
+\NormalTok{total\_cip\_graduates\_per\_soc }\OtherTok{\textless{}{-}}\NormalTok{ aggregated\_data}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(soc\_code, jobsohioregion, degree\_group\_logord, academic\_year)}\SpecialCharTok{\%\textgreater{}\%}
+   \FunctionTok{summarise}\NormalTok{(}\AttributeTok{total\_cip\_graduates\_by\_soc =} \FunctionTok{sum}\NormalTok{(total\_graduates, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }\AttributeTok{.groups =} \StringTok{"drop"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(jobsohioregion))}
+\CommentTok{\#So the graduate counts in this table represent all graduates in the same region, and academic year who are }
+\CommentTok{\#available to work in each occupation, separated by degree type. }
+
+\CommentTok{\# Merge total CIP graduates back with the main data}
+\NormalTok{aggregated\_data }\OtherTok{\textless{}{-}}\NormalTok{ aggregated\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(total\_cip\_graduates\_per\_soc, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"soc\_code"}\NormalTok{, }\StringTok{"jobsohioregion"}\NormalTok{, }\StringTok{"degree\_group\_logord"}\NormalTok{, }\StringTok{"academic\_year"}\NormalTok{))}
+
+\CommentTok{\# 7. Integrate LMI Data  \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}
+\NormalTok{aggregated\_data\_with\_lmi }\OtherTok{\textless{}{-}}\NormalTok{ aggregated\_data }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{left\_join}\NormalTok{(lmi\_oews, }\AttributeTok{by =} \FunctionTok{c}\NormalTok{(}\StringTok{"soc\_code"}\NormalTok{, }\StringTok{"jobsohioregion"}\NormalTok{))}\CommentTok{\#the lmi\_oews data applies to all years, we will just need to change the "employed" column to "employed 2020"}
+  \CommentTok{\# mutate(adjusted\_demand = annual\_openings\_growth * (as.numeric(total\_graduates) / as.numeric(total\_cip\_graduates\_by\_soc)))  I do not think the method of adjustment works. }
+
+
+\CommentTok{\#lets do the gap ratio calculations}
+\CommentTok{\# 8. Calculate Gap Ratio \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_}
+\NormalTok{master\_aggregated\_data }\OtherTok{\textless{}{-}}\NormalTok{ aggregated\_data\_with\_lmi}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(soc\_code, cip\_code, jobsohioregion, academic\_year)}\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\#took off CIP code}
+  \FunctionTok{summarise}\NormalTok{(}
+    
+                          \DocumentationTok{\#\#\#\#GAP RATIO CALCULATION BELOW\#\#\#\#\#}
+         \AttributeTok{gap\_ratio  =} \FunctionTok{sum}\NormalTok{(total\_graduates) }\SpecialCharTok{/} \FunctionTok{sum}\NormalTok{(annual\_openings\_growth, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+                          \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
+         
+    \CommentTok{\# Preserve columns by taking their first occurrence. They are all the same, but I forget the correct way to tell R }
+    \CommentTok{\#this fact so they are preserved....}
+    \AttributeTok{total\_cip\_graduates\_by\_soc =} \FunctionTok{first}\NormalTok{(total\_cip\_graduates\_by\_soc),}
+    \AttributeTok{total\_graduates =} \FunctionTok{first}\NormalTok{(total\_graduates),}
+    \AttributeTok{employment =} \FunctionTok{first}\NormalTok{(employment),}
+    \AttributeTok{annual\_openings\_growth =} \FunctionTok{first}\NormalTok{(annual\_openings\_growth),}
+    \AttributeTok{median\_wage =} \FunctionTok{first}\NormalTok{(median\_wage))}\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\#And finally, rename the regions for our visualizations!}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{jobsohioregion =} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{    jobsohioregion }\SpecialCharTok{==} \StringTok{\textquotesingle{}1\textquotesingle{}} \SpecialCharTok{\textasciitilde{}} \StringTok{\textquotesingle{}Northwest\textquotesingle{}}\NormalTok{,}
+\NormalTok{    jobsohioregion }\SpecialCharTok{==} \StringTok{\textquotesingle{}2\textquotesingle{}} \SpecialCharTok{\textasciitilde{}} \StringTok{\textquotesingle{}West\textquotesingle{}}\NormalTok{,}
+\NormalTok{    jobsohioregion }\SpecialCharTok{==} \StringTok{\textquotesingle{}3\textquotesingle{}} \SpecialCharTok{\textasciitilde{}} \StringTok{\textquotesingle{}Southwest\textquotesingle{}}\NormalTok{,}
+\NormalTok{    jobsohioregion }\SpecialCharTok{==} \StringTok{\textquotesingle{}4\textquotesingle{}} \SpecialCharTok{\textasciitilde{}} \StringTok{\textquotesingle{}Northeast\textquotesingle{}}\NormalTok{,}
+\NormalTok{    jobsohioregion }\SpecialCharTok{==} \StringTok{\textquotesingle{}5\textquotesingle{}} \SpecialCharTok{\textasciitilde{}} \StringTok{\textquotesingle{}Central\textquotesingle{}}\NormalTok{,}
+\NormalTok{    jobsohioregion }\SpecialCharTok{==} \StringTok{\textquotesingle{}6\textquotesingle{}} \SpecialCharTok{\textasciitilde{}} \StringTok{\textquotesingle{}Southeast\textquotesingle{}}\NormalTok{,}
+\NormalTok{    jobsohioregion }\SpecialCharTok{==} \StringTok{\textquotesingle{}39\textquotesingle{}} \SpecialCharTok{\textasciitilde{}} \StringTok{\textquotesingle{}Ohio\textquotesingle{}}\NormalTok{,  }
+    \ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}} \FunctionTok{as.character}\NormalTok{(jobsohioregion)}
+\NormalTok{  ))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `summarise()` has grouped output by 'soc_code', 'cip_code', 'jobsohioregion'.
+## You can override using the `.groups` argument.
+\end{verbatim}
+
+\subsection{Including Plots}\label{including-plots}
+
+You can also embed plots, for example:
+
+Note that the \texttt{echo\ =\ FALSE} parameter was added to the code
+chunk to prevent printing of the R code that generated the plot.
+
+\end{document}

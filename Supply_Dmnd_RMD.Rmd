@@ -428,14 +428,142 @@ Main Variables:
 
 
 ```{r Combine Data Files}
+library(dplyr)
 #read in crosswalk and do second sheet, which is CIP-SOC
-crosswalk <- read_excel("CIP SOC Crosswalk.xlsx", sheet = 2)
+cip_soc <- read_excel("data/cross-walks/CIP2020_SOC2018_Crosswalk.xlsx", sheet = 'CIP-SOC')
+soc_cip <- read_excel("data/cross-walks/CIP2020_SOC2018_Crosswalk.xlsx", sheet = 'SOC-CIP')
 
-#Add all SOCs to the Ohio Completions
-completions_cross <- left_join(ipeds_completions, crosswalk, by=c("cip_code"   = "CIP2020Code"))
+#Adjust the yearly median wage to hourly from LMI
+# Convert median wage from yearly to hourly if the symbol is "**". It's weird and there is prbably
+#a more efficient way to do this, but I am just using mutate and gsub for each case. If it is a yearly 
+#symbol, I am calculaing hourly wage from yearly by assuming 2080 hours in the year. 
+lmi_oews <- ohio_region_lmi_data%>%
+  mutate(jobsohioregion = as.character(jobsohioregion))%>%
+  mutate(median_wage = gsub("[^0-9.]", "", median_wage))%>%
+  mutate(median_wage_symbol = gsub("[^0-9.]", "", median_wage_symbol))%>%
+  mutate(median_wage = as.numeric(median_wage)) %>%
+  mutate(median_wage_symbol = trimws(median_wage_symbol))%>%
+  mutate(
+    median_wage = case_when(
+       !is.na(median_wage_symbol) & median_wage_symbol == "**" ~ median_wage / 2080,# Convert from yearly to hourly for '**'
+      !is.na(median_wage_symbol) & median_wage_symbol == "††" ~ median_wage / 2080, # Convert from statewide annual wage ('††')
+      !is.na(median_wage_symbol) & median_wage_symbol == "†" ~ median_wage,# Statewide hourly wage ('†'), no conversion
+      !is.na(median_wage_symbol) & median_wage_symbol == "▲" ~ NA_real_,  # Wage not available ('▲'), set to NA
+      median_wage >= 1000 ~ median_wage / 2080, #final check for over $1000 an hour, we maybe should just remove these, but I am assuming they are yearly. 
+      TRUE ~ median_wage  # Keep as is for other cases
+    )
+  )
+#run it and it looks like for our data, 96$ an hour is the max, makes sense. Those making much more #probably don't have a reported salary as such.I also know the sate supresses data on very high income individuals, but that would not come up in the median wage anyways. 
 
-#Add completions to the job outlook based on SOC
-ohio_completions_cross <- left_join(ohio_region_lmi_data, completions_cross, by=c("soc_code" = "SOC2018Code"))
+# Combine and De-duplicate Graduate Data _______________________________________
+graduates_data <- ipeds_completions%>%
+  dplyr::filter(academic_year >= 2010) %>% #here, academic year is the regular school year, so around Sept-May. This just let's us avoid pre-2010 codes (in my mind, need to check this)
+  mutate(academic_year = as.integer(academic_year), jobsohioregion = as.character(jobsohioregion))
+
+#Aggregate Data by Region and State_____________________________________________
+# Summarize graduates by region
+graduates_regions <- graduates_data %>%
+  group_by(jobsohioregion, cip_code, degree_group_logord, academic_year)%>%
+  #this is a count of graduates for each program, for each degree type, for each region, for each year.
+  summarise(graduates = sum(graduates, na.rm = TRUE), .groups = "drop")
+
+# Summarize graduates for the entire state, so same as prior chunk, but for the state overall
+graduates_statewide <- graduates_regions %>%
+  group_by(cip_code, degree_group_logord, academic_year) %>%
+  summarise(graduates = sum(graduates, na.rm = TRUE), .groups = "drop") %>%
+  mutate(jobsohioregion = "39")
+
+# Combine regional and statewide data
+state_region_graduates <- bind_rows(graduates_regions, graduates_statewide)
+rm(graduates_regions, graduates_statewide) #don't save the old versions
+
+
+# Join Graduate Data with CIP-SOC Mappings____________________________________________________
+#Standardize column names in both datasets
+cip_soc <- cip_soc %>%
+  mutate(cip_code = trimws(CIP2020Code))%>%
+  mutate(soc_code = trimws(SOC2018Code))
+soc_cip <- soc_cip %>%
+  mutate(cip_code = trimws(CIP2020Code))%>%
+  mutate(soc_code = trimws(SOC2018Code))
+
+state_region_graduates <- state_region_graduates %>%
+  mutate(cip_code = trimws(cip_code))
+
+#Check for unmatched `cip_code` values before joining
+unmatched_cip_codes <- setdiff(state_region_graduates$cip_code, cip_soc$cip_code)
+print(unmatched_cip_codes)  # Check for missing or mismatched `cip_code` values
+
+#merge the SOC codes into our graduate data, so we have counts by all CIP-SOC matchings. If we want to know the supply
+# for a specific SOC, we can sum up the graduates grouped by soc, degree, year, region. 
+#IMPORTANT TO REMEMBER, AFTER THIS STEP THEY ARE NO LONGER UNIQUE COUNTS, BUT MUST BE INTERPRITED BY THEIR GROUPING OF cip-soc
+aggregated_data <- state_region_graduates %>%
+  mutate(cip_only_id = paste(cip_code, degree_group_logord, academic_year, jobsohioregion, sep = "_")) %>%
+  left_join(cip_soc, by = c("cip_code" = "cip_code")) %>% #join in our SOC codes, most CIP codes match to multiple SOC codes, so the number of rows will increase. IT is important to conceptualize what is happeneing in this step. 
+    mutate(cip_code_soc_code_filter_groups_id = paste(cip_code, soc_code, degree_group_logord, academic_year, jobsohioregion, sep = "_")) %>% #This is to keep track of the groupings, we create a uniqe id. 
+  group_by(soc_code, cip_code, degree_group_logord, jobsohioregion, academic_year) %>%
+  summarise(total_graduates = sum(graduates, na.rm = TRUE), .groups = "drop") %>%
+  #For each CIP-SOC match-up, we have total-graduates. 
+   dplyr::select(cip_code, academic_year, jobsohioregion, degree_group_logord, total_graduates, soc_code)
+nrow(aggregated_data)
+
+#As an excersize, summarise JUST by our unique id variable, and see if we get the same number of observations
+# aggregated_dataII <- state_region_graduates %>%
+#   mutate(cip_only_id = paste(cip_code, degree_group_logord, academic_year, jobsohioregion, sep = "_")) %>%
+#   left_join(cip_soc, by = c("cip_code" = "cip_code")) %>% 
+#     mutate(cip_code_soc_code_filter_groups_id = paste(cip_code, soc_code, degree_group_logord, academic_year, jobsohioregion, sep = "_")) %>% 
+#   group_by(cip_code_soc_code_filter_groups_id) %>%
+#   summarise(total_graduates = sum(graduates, na.rm = TRUE), .groups = "drop") %>%
+#    select(cip_code_soc_code_filter_groups_id, total_graduates)
+# nrow(aggregated_dataII)
+
+
+# Calculate Total CIP Graduates per SOC, Region, and Degree Group ______________________________________________
+total_cip_graduates_per_soc <- aggregated_data%>%
+  group_by(soc_code, jobsohioregion, degree_group_logord, academic_year)%>%
+   summarise(total_cip_graduates_by_soc = sum(total_graduates, na.rm = TRUE), .groups = "drop")%>%
+  dplyr::filter(!is.na(jobsohioregion))
+#So the graduate counts in this table represent all graduates in the same region, and academic year who are 
+#available to work in each occupation, separated by degree type. 
+
+# Merge total CIP graduates back with the main data
+aggregated_data <- aggregated_data %>%
+  left_join(total_cip_graduates_per_soc, by = c("soc_code", "jobsohioregion", "degree_group_logord", "academic_year"))
+
+# 7. Integrate LMI Data  ____________________________________________
+aggregated_data_with_lmi <- aggregated_data %>%
+  left_join(lmi_oews, by = c("soc_code", "jobsohioregion"))#the lmi_oews data applies to all years, we will just need to change the "employed" column to "employed 2020"
+  # mutate(adjusted_demand = annual_openings_growth * (as.numeric(total_graduates) / as.numeric(total_cip_graduates_by_soc)))  I do not think the method of adjustment works. 
+
+
+#lets do the gap ratio calculations
+# 8. Calculate Gap Ratio ________________________________________________________________________
+master_aggregated_data <- aggregated_data_with_lmi%>%
+  group_by(soc_code, cip_code, jobsohioregion, academic_year)%>% #took off CIP code
+  summarise(
+    
+                          ####GAP RATIO CALCULATION BELOW#####
+         gap_ratio  = sum(total_graduates) / sum(annual_openings_growth, na.rm = TRUE),
+                          ####################################
+         
+    # Preserve columns by taking their first occurrence. They are all the same, but I forget the correct way to tell R 
+    #this fact so they are preserved....
+    total_cip_graduates_by_soc = first(total_cip_graduates_by_soc),
+    total_graduates = first(total_graduates),
+    employment = first(employment),
+    annual_openings_growth = first(annual_openings_growth),
+    median_wage = first(median_wage))%>%
+  #And finally, rename the regions for our visualizations!
+  mutate(jobsohioregion = case_when(
+    jobsohioregion == '1' ~ 'Northwest',
+    jobsohioregion == '2' ~ 'West',
+    jobsohioregion == '3' ~ 'Southwest',
+    jobsohioregion == '4' ~ 'Northeast',
+    jobsohioregion == '5' ~ 'Central',
+    jobsohioregion == '6' ~ 'Southeast',
+    jobsohioregion == '39' ~ 'Ohio',  
+    TRUE ~ as.character(jobsohioregion)
+  ))
 ```
 
 
