@@ -428,7 +428,14 @@ Main Variables:
 
 
 ```{r Combine Data Files}
+#read in crosswalk and do second sheet, which is CIP-SOC
+crosswalk <- read_excel("CIP SOC Crosswalk.xlsx", sheet = 2)
 
+#Add all SOCs to the Ohio Completions
+completions_cross <- left_join(ipeds_completions, crosswalk, by=c("cip_code"   = "CIP2020Code"))
+
+#Add completions to the job outlook based on SOC
+ohio_completions_cross <- left_join(ohio_region_lmi_data, completions_cross, by=c("soc_code" = "SOC2018Code"))
 ```
 
 
