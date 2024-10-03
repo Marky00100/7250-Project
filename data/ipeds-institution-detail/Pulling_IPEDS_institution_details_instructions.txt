@@ -1,0 +1,40 @@
+#FOR FUTURE, ADD THE BELOW INSTRUCTIONS AND THE NEXT CHUNK'S INSTRUCTIONS TO A READ_ME FILE
+# IPEDS Directory data -----
+# https://nces.ed.gov/ipeds/use-the-data
+# Survey Data > Custom Data Files
+# Use provisional release data, continue
+# Step 1 - Select Instituitions:
+# Select "By Variables", "Browse/Search Variables"
+#  Institutional Characteristics, Directory Information, select most recent year and "State abbreviation", continue, continue
+#   Under "Variable Title (Table Name)" click the link "State abbreviation - (17)" and check the box for Ohio, save, submit
+# Click Continue to Step 2 - Select Variables
+# + Institutional Characteristics
+# + Directory information, response status and frequently used variables
+# + Directory information and response status:
+# NOT NEEDED: Institution (entity) name -- they give you this by default, and if you request it, you get it twice!
+# Institution name alias
+# Street address or post office box
+# City location of institution
+# State abbreviation
+# ZIP code
+# General information telephone number
+# Institution's internet website address
+# Employer Identification Number
+# Fips County code
+# County name
+# Longitude location of institution
+# Latitude location of institution
+# UNITID for merged schools
+# Year institution was deleted from IPEDS
+# Date institution closed
+# Institution is active in current year
+# + Institution Classifications:
+# Sector of institution
+# Level of institution
+# Control of institution
+# Highest level of offering
+
+
+# Hit Continue to move on to a page listing the requested data.
+# Select "STATA", which actually will produce a CSV but uses codes instead of value labels, which is good.
+# .do files are also provided for each, should there be any question about value labels.

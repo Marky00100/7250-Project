@@ -253,46 +253,8 @@ save(ohio_region_lmi_data, file = rda_file_path)
 
 
 ```{r IPEDS Institution Information}
-#FOR FUTURE, ADD THE BELOW INSTRUCTIONS AND THE NEXT CHUNK'S INSTRUCTIONS TO A READ_ME FILE
-# IPEDS Directory data -----
+# IPEDS Directory data ----- Check the Read_me file in the data folder for instructions on how to pull. 
 # https://nces.ed.gov/ipeds/use-the-data
-# Survey Data > Custom Data Files
-# Use provisional release data, continue
-# Step 1 - Select Instituitions:
-# Select "By Variables", "Browse/Search Variables"
-#  Institutional Characteristics, Directory Information, select most recent year and "State abbreviation", continue, continue
-#   Under "Variable Title (Table Name)" click the link "State abbreviation - (17)" and check the box for Ohio, save, submit
-# Click Continue to Step 2 - Select Variables
-# + Institutional Characteristics
-# + Directory information, response status and frequently used variables
-# + Directory information and response status:
-# NOT NEEDED: Institution (entity) name -- they give you this by default, and if you request it, you get it twice!
-# Institution name alias
-# Street address or post office box
-# City location of institution
-# State abbreviation
-# ZIP code
-# General information telephone number
-# Institution's internet website address
-# Employer Identification Number
-# Fips County code
-# County name
-# Longitude location of institution
-# Latitude location of institution
-# UNITID for merged schools
-# Year institution was deleted from IPEDS
-# Date institution closed
-# Institution is active in current year
-# + Institution Classifications:
-# Sector of institution
-# Level of institution
-# Control of institution
-# Highest level of offering
-
-
-# Hit Continue to move on to a page listing the requested data.
-# Select "STATA", which actually will produce a CSV but uses codes instead of value labels, which is good.
-# .do files are also provided for each, should there be any question about value labels.
 # Get JOR codes to attach to the IPEDS directory data
 load('data/cross-walks/jobsohioregions.rda')
 
@@ -316,23 +278,8 @@ save(ipeds_directory, file = 'data/ipeds-institution-detail/ipeds_directory.rda'
 
 
 ```{r IPEDS Completers}
-# IPEDS Data -----
+# IPEDS Data ----- Check the Read_me file in the data folder for instructions on how to pull. 
 # https://nces.ed.gov/ipeds/use-the-data
-# Survey Data > Custom Data Files
-# Step 1 - Select Instituitions:
-# Select "By Variables", "Browse/Search Variables"
-#  Institutional Characteristics, Directory Information, select most recent year and "State abbreviation", continue, continue
-#   Under "Variable Title (Table Name)" click the link "State abbreviation - (##)" and check the box for Ohio, save, submit
-# Click Continue to Step 2 - Select Variables
-# For each year wanted under Available Year(s) do:
-#   click the year (each year refers to school year ending June 30 of that year)
-#   Completions, Awards/degrees conferred by program (CIP), check Grand total
-#   (repeat)
-# Hit Continue to move on to a page listing each of the requested data sets.
-# For each one, select "STATA", which actually will produce CSVs but uses codes instead of value labels, which is good.
-# .do files are also provided for each, should there be any question about value labels.
-
-
 
 #Usefull to get the remappings for award level, ie. these are the education levels. 
 ## From the STATA .do file from IPEDS for 1997:
