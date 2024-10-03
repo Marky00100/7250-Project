@@ -24,7 +24,7 @@ library(zoo)
 ```
 
 
-```{r LMI Job Data Loading}
+```{r LMI Job Data Loading for Regions}
 # This code reads the LMI jobs demand data by region and occupation from the ODJFS website. 
 
 #Paths
@@ -139,9 +139,10 @@ response_southwest <- GET(url_southwest, write_disk(temp_southwest, overwrite = 
 lmi_oews <- bind_rows(data_northeast, data_central, data_west, data_southeast, data_northwest, data_southwest)
 #OKAY! all Regions loaded.
 
+```
 
 
-
+```{r LMI Job Data Loading for State}
 #Ohio overall data_____________________________________________________________________________
 # Define the column names manually, including the new 'median_wage_symbol'. This is because I cannot get the same method as the regions to work for Ohio overall, ran out of time. 
 column_names <- c(
@@ -173,9 +174,10 @@ colnames(ohio_data) <- column_names
 ohio_data <- ohio_data %>%
   mutate(jobsohioregion = 'Ohio')
 
+```
 
 
-
+```{r Combine State and Regional LMI Data}
 #Combine Ohio and Region Data___________________________________________________________________________
 # Ensure consistent column names and types for `ohio_data_trimmed`
 ohio_data_trimmed <- ohio_data %>%
@@ -247,6 +249,7 @@ ohio_region_lmi_data <- bind_rows(lmi_oews, ohio_data_trimmed)%>%
 rda_file_path <- paste0(target_folder, "ohio_region_lmi_data.rda") #rda's always better (I think?)
 save(ohio_region_lmi_data, file = rda_file_path)
 ```
+
 
 
 ```{r IPEDS Institution Information}
@@ -427,12 +430,7 @@ Main Variables:
 
 
 
-```{r Combine Data Files}
-library(dplyr)
-#read in crosswalk and do second sheet, which is CIP-SOC
-cip_soc <- read_excel("data/cross-walks/CIP2020_SOC2018_Crosswalk.xlsx", sheet = 'CIP-SOC')
-soc_cip <- read_excel("data/cross-walks/CIP2020_SOC2018_Crosswalk.xlsx", sheet = 'SOC-CIP')
-
+```{r Adjust Median Wage to Hourly}
 #Adjust the yearly median wage to hourly from LMI
 # Convert median wage from yearly to hourly if the symbol is "**". It's weird and there is prbably
 #a more efficient way to do this, but I am just using mutate and gsub for each case. If it is a yearly 
@@ -456,6 +454,14 @@ lmi_oews <- ohio_region_lmi_data%>%
 #run it and it looks like for our data, 96$ an hour is the max, makes sense. Those making much more #probably don't have a reported salary as such.I also know the sate suppresses data on very high income individuals, but that would not come up in the median wage anyways. 
 
 summary(lmi_oews$median_wage)
+```
+
+
+The lowest median hourly range is around 9.39 and the max is 96.98. The median hourly wage is 23.09 and the mean is 26.68. Since the median is lower than the mean, this means that there are some higher wages that is pulling the mean up.
+
+
+```{r Combine Regional and State Graduates}
+library(dplyr)
 
 # Combine and De-duplicate Graduate Data _______________________________________
 graduates_data <- ipeds_completions%>%
@@ -478,6 +484,17 @@ graduates_statewide <- graduates_regions %>%
 # Combine regional and statewide data
 state_region_graduates <- bind_rows(graduates_regions, graduates_statewide)
 rm(graduates_regions, graduates_statewide) #don't save the old versions
+
+
+```
+
+
+```{r Combine CIP and SOC Data}
+
+
+#read in crosswalk and do second sheet, which is CIP-SOC
+cip_soc <- read_excel("data/cross-walks/CIP2020_SOC2018_Crosswalk.xlsx", sheet = 'CIP-SOC')
+soc_cip <- read_excel("data/cross-walks/CIP2020_SOC2018_Crosswalk.xlsx", sheet = 'SOC-CIP')
 
 
 # Join Graduate Data with CIP-SOC Mappings____________________________________________________
@@ -537,7 +554,10 @@ aggregated_data_with_lmi <- aggregated_data %>%
   left_join(lmi_oews, by = c("soc_code", "jobsohioregion"))#the lmi_oews data applies to all years, we will just need to change the "employed" column to "employed 2020"
   # mutate(adjusted_demand = annual_openings_growth * (as.numeric(total_graduates) / as.numeric(total_cip_graduates_by_soc)))  I do not think the method of adjustment works. 
 
+```
 
+
+```{r Gap Ratios}
 #lets do the gap ratio calculations
 # 8. Calculate Gap Ratio ________________________________________________________________________
 master_aggregated_data <- aggregated_data_with_lmi%>%
@@ -567,6 +587,7 @@ master_aggregated_data <- aggregated_data_with_lmi%>%
     TRUE ~ as.character(jobsohioregion)
   ))
 ```
+
 
 
 ```{r Plots}
