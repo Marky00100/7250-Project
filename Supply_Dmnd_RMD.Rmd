@@ -281,8 +281,6 @@ save(ipeds_directory, file = 'data/ipeds-institution-detail/ipeds_directory.rda'
 # IPEDS Data ----- Check the Read_me file in the data folder for instructions on how to pull. 
 # https://nces.ed.gov/ipeds/use-the-data
 
-#Usefull to get the remappings for award level, ie. these are the education levels. 
-## From the STATA .do file from IPEDS for 1997:
 # label values cipcode         label_cipcode        
 # label define label_awlevel         15 "Degrees/certificates total"
 # label define label_awlevel         12 "Degrees total", add
@@ -301,7 +299,7 @@ save(ipeds_directory, file = 'data/ipeds-institution-detail/ipeds_directory.rda'
 # label define label_awlevel         11 "First-professional certificate", add
 
 #Using the above category definitions from the STATA file you can download from IPEDS, let's remap to levels
-#so we actually know what is goin on
+#so we actually know what is going on
 ipeds_degree_remapping <- tribble(
   ~awlevel, ~degree_group_logord,
   '1',        1L,
@@ -327,7 +325,7 @@ ipeds_degree_remapping <- tribble(
 # Read files, keep only 6-digit CIP, address some variable name changes (crace24/ctotalt)
 # Using default character because it is easier to start from there, keep CIP codes correct,
 
-#First, use list.files to find the .zip files that download from IPEDS, better to store them as .zip, because they are large. If we downloaded as above, then we should only have Ohio. 
+#First, use list.files to find the .zip files that download from IPEDS, better to store them as .zip, because they are large. If we downloaded as the read_me, then we should only have Ohio in each zip file.  
 ipeds_completions <- list.files('data/ipeds-completions', '.*zip$', full.names = TRUE) %>%  
   map_dfr(~ read_csv(., col_types = cols(.default = col_character()))) %>%
   filter(nchar(cipcode) == 7) %>%  # 7 because of the "." in the number, e.g. "15.0101"
@@ -379,9 +377,9 @@ Main Variables:
 
 ```{r Adjust Median Wage to Hourly}
 #Adjust the yearly median wage to hourly from LMI
-# Convert median wage from yearly to hourly if the symbol is "**". It's weird and there is prbably
+# Convert median wage from yearly to hourly if the symbol is "**". It's weird and there is probably
 #a more efficient way to do this, but I am just using mutate and gsub for each case. If it is a yearly 
-#symbol, I am calculaing hourly wage from yearly by assuming 2080 hours in the year. 
+#symbol, I am calculating hourly wage from yearly by assuming 2080 hours in the year. 
 lmi_oews <- ohio_region_lmi_data%>%
   mutate(jobsohioregion = as.character(jobsohioregion))%>%
   mutate(median_wage = gsub("[^0-9.]", "", median_wage))%>%
@@ -496,7 +494,7 @@ total_cip_graduates_per_soc <- aggregated_data %>%
 aggregated_data <- aggregated_data %>%
   left_join(total_cip_graduates_per_soc, by = c("soc_code", "jobsohioregion", "degree_group_logord", "academic_year"))
 
-# 7. Integrate LMI Data  ____________________________________________
+# Integrate LMI Data  ____________________________________________
 aggregated_data_with_lmi <- aggregated_data %>%
   left_join(lmi_oews, by = c("soc_code", "jobsohioregion"))#the lmi_oews data applies to all years, we will just need to change the "employed" column to "employed 2020"
   # mutate(adjusted_demand = annual_openings_growth * (as.numeric(total_graduates) / as.numeric(total_cip_graduates_by_soc)))  I do not think the method of adjustment works. 
@@ -506,7 +504,7 @@ aggregated_data_with_lmi <- aggregated_data %>%
 
 ```{r Gap Ratios}
 #lets do the gap ratio calculations
-# 8. Calculate Gap Ratio ________________________________________________________________________
+# Calculate Gap Ratio ________________________________________________________________________
 master_aggregated_data <- aggregated_data_with_lmi%>%
   group_by(soc_code, cip_code, jobsohioregion, academic_year)%>% #took off CIP code
   summarise(
