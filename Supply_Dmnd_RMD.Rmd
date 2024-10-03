@@ -795,7 +795,6 @@ ggplot(ipeds_completions, aes(x = factor(cip_code), y = graduates, fill = factor
 #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
-#Could use some reformatting I think
 # Pie chart of total graduates by degree level
 total_graduates_by_degree <- ipeds_completions %>% 
   mutate(degree_group_logord = case_when(
@@ -805,12 +804,18 @@ total_graduates_by_degree <- ipeds_completions %>%
     degree_group_logord == 4 ~ 'Graduate Degree',
     degree_group_logord == 5 ~ 'Grad Certificate')) %>% 
   group_by(degree_group_logord) %>%
-  summarise(total_graduates = sum(graduates, na.rm = TRUE))
+  summarise(total_graduates = sum(graduates, na.rm = TRUE)) %>% 
+  arrange(desc(total_graduates)) %>%
+  mutate(prop = round(total_graduates / sum(total_graduates) *100, digits = 2))
 
-ggplot(total_graduates_by_degree, aes(x = "", y = total_graduates, fill = factor(degree_group_logord))) +
+ggplot(total_graduates_by_degree, aes(x = "", y = prop, fill = factor(degree_group_logord))) +
   geom_bar(stat = "identity", width = 1) +
-  coord_polar("y") +
+  coord_polar("y", start = 0) +
   labs(title = "Total Graduates by Degree Level",
-       fill = "Degree Level") +
+       fill = "Degree Level",
+       y = "Proportion of Total Graduates") +
+  geom_text(aes(label = prop),
+            color = "white",
+            position = position_stack(vjust = 0.5)) +
   theme_minimal()
 ```
