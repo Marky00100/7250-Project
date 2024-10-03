@@ -453,7 +453,9 @@ lmi_oews <- ohio_region_lmi_data%>%
       TRUE ~ median_wage  # Keep as is for other cases
     )
   )
-#run it and it looks like for our data, 96$ an hour is the max, makes sense. Those making much more #probably don't have a reported salary as such.I also know the sate supresses data on very high income individuals, but that would not come up in the median wage anyways. 
+#run it and it looks like for our data, 96$ an hour is the max, makes sense. Those making much more #probably don't have a reported salary as such.I also know the sate suppresses data on very high income individuals, but that would not come up in the median wage anyways. 
+
+summary(lmi_oews$median_wage)
 
 # Combine and De-duplicate Graduate Data _______________________________________
 graduates_data <- ipeds_completions%>%
@@ -479,7 +481,7 @@ rm(graduates_regions, graduates_statewide) #don't save the old versions
 
 
 # Join Graduate Data with CIP-SOC Mappings____________________________________________________
-#Standardize column names in both datasets
+#Standardize column names in both data sets
 cip_soc <- cip_soc %>%
   mutate(cip_code = trimws(CIP2020Code))%>%
   mutate(soc_code = trimws(SOC2018Code))
@@ -499,15 +501,15 @@ print(unmatched_cip_codes)  # Check for missing or mismatched `cip_code` values
 #IMPORTANT TO REMEMBER, AFTER THIS STEP THEY ARE NO LONGER UNIQUE COUNTS, BUT MUST BE INTERPRITED BY THEIR GROUPING OF cip-soc
 aggregated_data <- state_region_graduates %>%
   mutate(cip_only_id = paste(cip_code, degree_group_logord, academic_year, jobsohioregion, sep = "_")) %>%
-  left_join(cip_soc, by = c("cip_code" = "cip_code")) %>% #join in our SOC codes, most CIP codes match to multiple SOC codes, so the number of rows will increase. IT is important to conceptualize what is happeneing in this step. 
-    mutate(cip_code_soc_code_filter_groups_id = paste(cip_code, soc_code, degree_group_logord, academic_year, jobsohioregion, sep = "_")) %>% #This is to keep track of the groupings, we create a uniqe id. 
+  left_join(cip_soc, by = c("cip_code" = "cip_code")) %>% #join in our SOC codes, most CIP codes match to multiple SOC codes, so the number of rows will increase. IT is important to conceptualize what is happening in this step. 
+    mutate(cip_code_soc_code_filter_groups_id = paste(cip_code, soc_code, degree_group_logord, academic_year, jobsohioregion, sep = "_")) %>% #This is to keep track of the groupings, we create a unique id. 
   group_by(soc_code, cip_code, degree_group_logord, jobsohioregion, academic_year) %>%
   summarise(total_graduates = sum(graduates, na.rm = TRUE), .groups = "drop") %>%
   #For each CIP-SOC match-up, we have total-graduates. 
    dplyr::select(cip_code, academic_year, jobsohioregion, degree_group_logord, total_graduates, soc_code)
 nrow(aggregated_data)
 
-#As an excersize, summarise JUST by our unique id variable, and see if we get the same number of observations
+#As an exercise, summarize JUST by our unique id variable, and see if we get the same number of observations
 # aggregated_dataII <- state_region_graduates %>%
 #   mutate(cip_only_id = paste(cip_code, degree_group_logord, academic_year, jobsohioregion, sep = "_")) %>%
 #   left_join(cip_soc, by = c("cip_code" = "cip_code")) %>% 
@@ -792,6 +794,8 @@ ggplot(ipeds_completions, aes(x = factor(cip_code), y = graduates, fill = factor
 #   theme_minimal() +
 #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+
+#Could use some reformatting I think
 # Pie chart of total graduates by degree level
 total_graduates_by_degree <- ipeds_completions %>% 
   mutate(degree_group_logord = case_when(
