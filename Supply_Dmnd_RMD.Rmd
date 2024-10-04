@@ -23,6 +23,65 @@ library(httr)
 library(zoo)
 ```
 
+#Purpose
+
+The Purpose of this project is to provide background information to undergrad students, and to get a better understand of how ssaturated the labor market is for various degrees across the state of Ohio. Were you a student, this would be very
+useful information in deciding what university program to enter and where to focus your skill development. Were you to 
+have individual-level demand data for each student with specific skills, you would have a much better idea of where you should place your own efforts to increase your earnings possibilities and hire-ability. As we only have access to public  data, we will need to make some assumptions about supply by program, and demand by occupation. Namely, we are trusting the CIP-SOC crosswalk available on O*NET's site, which aligns Classification of Instructional Programs (CIPs) with Standard Occupational Classifications (SOCs). Of course, not all students who graduate from a specific program will be hired into a crosswalked occupation, but this crosswalk gives us general links between students and where they are qualified to be hired. 
+
+# Overview
+
+The **Supply-Demand Gap Analysis** consists of two parts: the supply and the demand. Demand data, specifically **LMI predicted yearly job openings**, are used to map demand by occupation. This RMarkdown outlines an attempt at modeling a supply demand gap analysis to help guide current student towards higher paying regions, and occupations with more demand relative to the number of graduates. This supply demand gap is calculated by dividing graduates sorted by **Classification of Instructional Programs (CIPs)** by job demand by **Standard Occupational Classifications (SOCs)**.. 
+
+- **Supply Stock**: Represents the current available workforce for a given occupation or industry, including employed and unemployed individuals.
+- **Supply Flow**: Represents the incoming workforce soon-to-be available, such as graduating students.
+
+Data were updated to the most current versions and consolidated into tables. Specifically:
+- **IPEDS (Integrated Postsecondary Education Data System)** was updated through the academic year 2022, serving as the primary source for supply flow.
+
+# Data Cleaning and Transformation
+
+## Flow
+
+- **IPEDS**: Publicly available at [IPEDS Website](https://nces.ed.gov/ipeds/), the list of CIPs includes all graduates in the state. Basic cleaning steps include:
+  - Added new years of data up to 2022.
+  - Standardized CIP codes and aggregated data by award level, program, and institution, then aggregating up to the JobsOhio region level and the state level. 
+
+## Stock
+
+- **LMI**: Long-term labor market information publicly available at [LMI Website](http://ohiolmi.com). Basic cleaning steps include:
+  - Standardizing employment projections, occupational codes, and wage data format. 
+
+# Data Structure
+
+The counts by completers for the flow data source (IPEDS) are grouped as follows:
+
+- **Year**: Aggregating data annually.
+- **Graduating Program**: Using standardized CIP/SOC codes.
+- **JobsOhio Region**: Adjustments based on zip code or county to JobsOhio region.
+- **Education Classification**: Grouped into Certificate, Associate, Bachelor's, and Graduate levels.
+
+# Geography
+
+- Adjusted based on zip code to county to JobsOhio region, and were downloaded from the Ohio Department of Jobs and Family Services. The zip to county data was found from the two sources below:
+[HUD Office of Policy Development and Research](https://www.huduser.gov/) and [UnitedStatesZipCodes.org](https://www.unitedstateszipcodes.org/).
+
+<!-- # CIP/SOC Year -->
+
+<!-- Given the changes in CIP and SOC codes from 2000 to 2020, we target **SOC-2010** and aim to capture CIP codes from 2000, 2010, and 2020. To achieve this, we: -->
+
+<!-- - Convert **CIP 2000 to 2020**. -->
+<!-- - Combine **CIP 2010 - SOC 2010** with **CIP 2020 - SOC 2018**. -->
+<!-- - Convert **SOC codes from 2018 to 2010**. -->
+
+# References
+
+- **IPEDS**: [IPEDS Data Center](https://nces.ed.gov/ipeds/datacenter/)
+- **OEWS**: [BLS OEWS](https://www.bls.gov/oes/)
+- **LMI**: [Ohio LMI](http://ohiolmi.com/)
+- **O*NET**: [O*NET Online](https://www.onetonline.org/)
+- **Workforce Planning**: [Micheli, G. J. L., Martino, A., Porta, F., Cravello, A., Panaro, M., & Calabrese, A. (2023). Workforce planning in project-driven companies: a high-level guideline. *Frontiers in Industrial Engineering*, 1. [https://doi.org/10.3389/fieng.2023.1267244](https://doi.org/10.3389/fieng.2023.1267244)
+
 
 ```{r LMI Job Data Loading for Regions}
 # This code reads the LMI jobs demand data by region and occupation from the ODJFS website. 
