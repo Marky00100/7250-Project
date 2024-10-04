@@ -535,19 +535,7 @@ master_aggregated_data <- aggregated_data_with_lmi%>%
 
 
 
-```{r Plots}
-
-# Bar plot of employment by region and occupation: 
-# ggplot(ohio_region_lmi_data, aes(x = factor(jobsohioregion), y = employment, fill = soc_lmi_title)) +
-#   geom_bar(stat = "identity", position = "dodge") +
-#   labs(title = "Employment by Region and Occupation",
-#        x = "Region",
-#        y = "Employment",
-#        fill = "Occupation") +
-#   theme_minimal()
-# ^^^ From Stephen: Too many variables for employment to be a useful chart in my opinion and don't think it would display correctly
-
-# Bar plot of employment by region
+```{r Bar plot of employment by region}
 ohio_region_lmi_data %>% 
   mutate(jobsohioregion = case_when(
     jobsohioregion == '1' ~ 'Northwest',
@@ -566,7 +554,113 @@ ohio_region_lmi_data %>%
        y = "Employment",
        fill = "Region") +
   theme_minimal()
+```
 
+
+
+```{r Scatter plot of median hourly wage vs. annual openings growth}
+lmi_oews %>% 
+  mutate(jobsohioregion = case_when(
+    jobsohioregion == '1' ~ 'Northwest',
+    jobsohioregion == '2' ~ 'West',
+    jobsohioregion == '3' ~ 'Southwest',
+    jobsohioregion == '4' ~ 'Northeast',
+    jobsohioregion == '5' ~ 'Central',
+    jobsohioregion == '6' ~ 'Southeast',
+    jobsohioregion == '39' ~ 'Ohio',  
+    TRUE ~ as.character(jobsohioregion))) %>%
+  filter(jobsohioregion != "Ohio") %>% 
+  ggplot(aes(x = annual_openings_growth, y = median_wage, color = factor(jobsohioregion))) +
+  geom_point() +
+  labs(title = "Median Hourly Wage vs. Annual Openings Growth",
+       x = "Annual Openings Growth",
+       y = "Median Hourly Wage",
+       color = "Region") +
+  theme_minimal()
+```
+
+
+
+```{r Bar Chart of graduates by degree level}
+ipeds_completions %>% 
+  mutate(degree_group_logord = case_when(
+    degree_group_logord == 1 ~ 'Certificate',
+    degree_group_logord == 2 ~ 'Associates',
+    degree_group_logord == 3 ~ 'Bachelors',
+    degree_group_logord == 4 ~ 'Graduate Degree',
+    degree_group_logord == 5 ~ 'Grad Certificate')) %>% 
+  ggplot(aes(x = factor(degree_group_logord), y = graduates, fill = factor(degree_group_logord))) +
+  geom_bar(stat = "identity") +
+  labs(title = "Graduates by Degree Level",
+       x = "Degree Level",
+       y = "Number of Graduates",
+       fill = "Degree Level") +
+  theme_minimal()
+```
+
+
+
+```{r Box plot of Hourly median wage by region}
+lmi_oews %>% 
+  mutate(jobsohioregion = case_when(
+    jobsohioregion == '1' ~ 'Northwest',
+    jobsohioregion == '2' ~ 'West',
+    jobsohioregion == '3' ~ 'Southwest',
+    jobsohioregion == '4' ~ 'Northeast',
+    jobsohioregion == '5' ~ 'Central',
+    jobsohioregion == '6' ~ 'Southeast',
+    jobsohioregion == '39' ~ 'Ohio',  
+    TRUE ~ as.character(jobsohioregion))) %>%
+  filter(jobsohioregion != "Ohio") %>% 
+  ggplot(aes(x = factor(jobsohioregion), y = median_wage, fill = factor(jobsohioregion))) +
+  geom_boxplot() +
+  labs(title = "Hourly Median Wage by Region",
+       x = "Region",
+       y = "Hourly Median Wage",
+       fill = "Region") +
+  theme_minimal()
+```
+
+
+
+```{r Pie chart of total graduates by degree level}
+total_graduates_by_degree <- ipeds_completions %>% 
+  mutate(degree_group_logord = case_when(
+    degree_group_logord == 1 ~ 'Certificate',
+    degree_group_logord == 2 ~ 'Associates',
+    degree_group_logord == 3 ~ 'Bachelors',
+    degree_group_logord == 4 ~ 'Graduate Degree',
+    degree_group_logord == 5 ~ 'Grad Certificate')) %>% 
+  group_by(degree_group_logord) %>%
+  summarise(total_graduates = sum(graduates, na.rm = TRUE)) %>% 
+  arrange(desc(total_graduates)) %>%
+  mutate(prop = round(total_graduates / sum(total_graduates) *100, digits = 2))
+
+ggplot(total_graduates_by_degree, aes(x = "", y = prop, fill = factor(degree_group_logord))) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  labs(title = "Total Graduates by Degree Level",
+       fill = "Degree Level",
+       y = "Proportion of Total Graduates") +
+  geom_text(aes(label = prop),
+            color = "white",
+            position = position_stack(vjust = 0.5)) +
+  theme_minimal()
+```
+
+
+
+```{r Plots}
+
+# Bar plot of employment by region and occupation: 
+# ggplot(ohio_region_lmi_data, aes(x = factor(jobsohioregion), y = employment, fill = soc_lmi_title)) +
+#   geom_bar(stat = "identity", position = "dodge") +
+#   labs(title = "Employment by Region and Occupation",
+#        x = "Region",
+#        y = "Employment",
+#        fill = "Occupation") +
+#   theme_minimal()
+# ^^^ From Stephen: Too many variables for employment to be a useful chart in my opinion and don't think it would display correctly
 
 # Would need to filter down to certain employments
 # # Line plot of projected employment change by region
@@ -612,25 +706,7 @@ ohio_region_lmi_data %>%
 #   theme_minimal()
   
 #Same as above except used the cleaned median wage so it is hourly and made sure to take out Ohio as whole and regions are names and not numbers
-# Scatter plot of median hourly wage vs. annual openings growth
-lmi_oews %>% 
-  mutate(jobsohioregion = case_when(
-    jobsohioregion == '1' ~ 'Northwest',
-    jobsohioregion == '2' ~ 'West',
-    jobsohioregion == '3' ~ 'Southwest',
-    jobsohioregion == '4' ~ 'Northeast',
-    jobsohioregion == '5' ~ 'Central',
-    jobsohioregion == '6' ~ 'Southeast',
-    jobsohioregion == '39' ~ 'Ohio',  
-    TRUE ~ as.character(jobsohioregion))) %>%
-  filter(jobsohioregion != "Ohio") %>% 
-  ggplot(aes(x = annual_openings_growth, y = median_wage, color = factor(jobsohioregion))) +
-  geom_point() +
-  labs(title = "Median Hourly Wage vs. Annual Openings Growth",
-       x = "Annual Openings Growth",
-       y = "Median Hourly Wage",
-       color = "Region") +
-  theme_minimal()
+
 
 # # Bar Chart of graduates by degree level
 # ggplot(ipeds_completions, aes(x = factor(degree_group_logord), y = graduates, fill = factor(degree_group_logord))) +
@@ -642,22 +718,6 @@ lmi_oews %>%
 #   theme_minimal()
 
 #Renamed degree levels from numbers to names
-# Bar Chart of graduates by degree level
-ipeds_completions %>% 
-  mutate(degree_group_logord = case_when(
-    degree_group_logord == 1 ~ 'Certificate',
-    degree_group_logord == 2 ~ 'Associates',
-    degree_group_logord == 3 ~ 'Bachelors',
-    degree_group_logord == 4 ~ 'Graduate Degree',
-    degree_group_logord == 5 ~ 'Grad Certificate')) %>% 
-  ggplot(aes(x = factor(degree_group_logord), y = graduates, fill = factor(degree_group_logord))) +
-  geom_bar(stat = "identity") +
-  labs(title = "Graduates by Degree Level",
-       x = "Degree Level",
-       y = "Number of Graduates",
-       fill = "Degree Level") +
-  theme_minimal()
-
 
 #Unsure of what data this uses. Cannot find in file
 # # Combined plot of employment and graduates by region
@@ -686,25 +746,7 @@ ipeds_completions %>%
 
 
 #As above but named regions and used converted to hourly medians
-# Box plot of Hourly median wage by region
-lmi_oews %>% 
-  mutate(jobsohioregion = case_when(
-    jobsohioregion == '1' ~ 'Northwest',
-    jobsohioregion == '2' ~ 'West',
-    jobsohioregion == '3' ~ 'Southwest',
-    jobsohioregion == '4' ~ 'Northeast',
-    jobsohioregion == '5' ~ 'Central',
-    jobsohioregion == '6' ~ 'Southeast',
-    jobsohioregion == '39' ~ 'Ohio',  
-    TRUE ~ as.character(jobsohioregion))) %>%
-  filter(jobsohioregion != "Ohio") %>% 
-  ggplot(aes(x = factor(jobsohioregion), y = median_wage, fill = factor(jobsohioregion))) +
-  geom_boxplot() +
-  labs(title = "Hourly Median Wage by Region",
-       x = "Region",
-       y = "Hourly Median Wage",
-       fill = "Region") +
-  theme_minimal()
+
 
 # Tried to update this but not sure I understand plot
 # # Density plot of employment change
@@ -738,15 +780,15 @@ lmi_oews %>%
 #   theme_minimal()
 
 
-# Bar plot of graduates by CIP code
-ggplot(ipeds_completions, aes(x = factor(cip_code), y = graduates, fill = factor(cip_code))) +
-  geom_bar(stat = "identity") +
-  labs(title = "Graduates by CIP Code",
-       x = "CIP Code",
-       y = "Number of Graduates",
-       fill = "CIP Code") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))  
+# # Bar plot of graduates by CIP code
+# ggplot(ipeds_completions, aes(x = factor(cip_code), y = graduates, fill = factor(cip_code))) +
+#   geom_bar(stat = "identity") +
+#   labs(title = "Graduates by CIP Code",
+#        x = "CIP Code",
+#        y = "Number of Graduates",
+#        fill = "CIP Code") +
+#   theme_minimal() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1))  
 
 
 #Need to narrow down  
@@ -760,28 +802,4 @@ ggplot(ipeds_completions, aes(x = factor(cip_code), y = graduates, fill = factor
 #   theme_minimal() +
 #   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-
-# Pie chart of total graduates by degree level
-total_graduates_by_degree <- ipeds_completions %>% 
-  mutate(degree_group_logord = case_when(
-    degree_group_logord == 1 ~ 'Certificate',
-    degree_group_logord == 2 ~ 'Associates',
-    degree_group_logord == 3 ~ 'Bachelors',
-    degree_group_logord == 4 ~ 'Graduate Degree',
-    degree_group_logord == 5 ~ 'Grad Certificate')) %>% 
-  group_by(degree_group_logord) %>%
-  summarise(total_graduates = sum(graduates, na.rm = TRUE)) %>% 
-  arrange(desc(total_graduates)) %>%
-  mutate(prop = round(total_graduates / sum(total_graduates) *100, digits = 2))
-
-ggplot(total_graduates_by_degree, aes(x = "", y = prop, fill = factor(degree_group_logord))) +
-  geom_bar(stat = "identity", width = 1) +
-  coord_polar("y", start = 0) +
-  labs(title = "Total Graduates by Degree Level",
-       fill = "Degree Level",
-       y = "Proportion of Total Graduates") +
-  geom_text(aes(label = prop),
-            color = "white",
-            position = position_stack(vjust = 0.5)) +
-  theme_minimal()
 ```
