@@ -535,7 +535,7 @@ master_aggregated_data <- aggregated_data_with_lmi%>%
 
 
 
-```{r Bar plot of employment by region}
+```{r Bar plot of current employment by region}
 ohio_region_lmi_data %>% 
   mutate(jobsohioregion = case_when(
     jobsohioregion == '1' ~ 'Northwest',
@@ -546,7 +546,7 @@ ohio_region_lmi_data %>%
     jobsohioregion == '6' ~ 'Southeast',
     jobsohioregion == '39' ~ 'Ohio',  
     TRUE ~ as.character(jobsohioregion))) %>%
-  filter(jobsohioregion != "Ohio") %>% 
+  filter(jobsohioregion != "Ohio" & soc_lmi_title == "Total, All Occupations") %>% 
   ggplot(aes(x = factor(jobsohioregion), y = employment, fill = jobsohioregion)) +
   geom_bar(stat = "identity", position = "dodge") +
   labs(title = "Employment by Region",
@@ -556,7 +556,31 @@ ohio_region_lmi_data %>%
   theme_minimal()
 ```
 
+The above chart shows what the total employment is per region in Ohio. The northeast region has the most people employed. The southeast region has the lowest number of people employed.
 
+
+```{r Bar plot of 2030 change in employment by region}
+ohio_region_lmi_data %>% 
+  mutate(jobsohioregion = case_when(
+    jobsohioregion == '1' ~ 'Northwest',
+    jobsohioregion == '2' ~ 'West',
+    jobsohioregion == '3' ~ 'Southwest',
+    jobsohioregion == '4' ~ 'Northeast',
+    jobsohioregion == '5' ~ 'Central',
+    jobsohioregion == '6' ~ 'Southeast',
+    jobsohioregion == '39' ~ 'Ohio',  
+    TRUE ~ as.character(jobsohioregion))) %>%
+  filter(jobsohioregion != "Ohio" & soc_lmi_title == "Total, All Occupations") %>% 
+  ggplot(aes(x = factor(jobsohioregion), y = change_employment, fill = jobsohioregion)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Projected Change in Employment by Region",
+       x = "Region",
+       y = "Projected Change in Employment",
+       fill = "Region") +
+  theme_minimal()
+```
+
+This chart shows the projected change in number of jobs in each region between now and 2030. All regions are projected to grow. The central will grow the most. The northwest and southeast will have the least, with the southeast being the lowest.
 
 ```{r Scatter plot of median hourly wage vs. annual openings growth}
 lmi_oews %>% 
@@ -569,7 +593,7 @@ lmi_oews %>%
     jobsohioregion == '6' ~ 'Southeast',
     jobsohioregion == '39' ~ 'Ohio',  
     TRUE ~ as.character(jobsohioregion))) %>%
-  filter(jobsohioregion != "Ohio") %>% 
+  filter(jobsohioregion != "Ohio" & soc_lmi_title != "Total, All Occupations") %>% 
   ggplot(aes(x = annual_openings_growth, y = median_wage, color = factor(jobsohioregion))) +
   geom_point() +
   labs(title = "Median Hourly Wage vs. Annual Openings Growth",
@@ -579,7 +603,26 @@ lmi_oews %>%
   theme_minimal()
 ```
 
+This plot is a scatter that compares the annual jobs growth against what the median hourly wage is for that job. There doesn't appear to be a trend between growth and wage. The majority of growth appears to be between an annual loss or gain of 500 jobs.
 
+```{r Least and Most Annual Job Growth}
+lmi_oews %>% 
+  mutate(jobsohioregion = case_when(
+    jobsohioregion == '1' ~ 'Northwest',
+    jobsohioregion == '2' ~ 'West',
+    jobsohioregion == '3' ~ 'Southwest',
+    jobsohioregion == '4' ~ 'Northeast',
+    jobsohioregion == '5' ~ 'Central',
+    jobsohioregion == '6' ~ 'Southeast',
+    jobsohioregion == '39' ~ 'Ohio',  
+    TRUE ~ as.character(jobsohioregion))) %>%
+  filter(jobsohioregion != "Ohio" & soc_lmi_title != "Total, All Occupations") %>%
+  filter(jobsohioregion == "Northeast" & (annual_openings_growth >= 1750 | annual_openings_growth <= -1000)) %>% 
+  select(soc_lmi_title, annual_openings_growth) %>% 
+  print()
+```
+
+Based on the previous plot, we could see that the most and least job growth was in the Northeast region. We could also tell that the growth was more than 1750 and the decrease was more than 1000. Using the region and annual growth, we can find that the largest growth was in the food prep and serving space and the largest decline was in the office and admin support space.
 
 ```{r Bar Chart of graduates by degree level}
 ipeds_completions %>% 
@@ -598,7 +641,7 @@ ipeds_completions %>%
   theme_minimal()
 ```
 
-
+This plot shows the number of graduates that have varying degrees. The largest degree is the bachelors and the lowest is the grad certificate. All other degrees have similar numbers of graduates across them.
 
 ```{r Box plot of Hourly median wage by region}
 lmi_oews %>% 
@@ -611,7 +654,7 @@ lmi_oews %>%
     jobsohioregion == '6' ~ 'Southeast',
     jobsohioregion == '39' ~ 'Ohio',  
     TRUE ~ as.character(jobsohioregion))) %>%
-  filter(jobsohioregion != "Ohio") %>% 
+  filter(jobsohioregion != "Ohio" & soc_lmi_title != "Total, All Occupations") %>% 
   ggplot(aes(x = factor(jobsohioregion), y = median_wage, fill = factor(jobsohioregion))) +
   geom_boxplot() +
   labs(title = "Hourly Median Wage by Region",
@@ -621,7 +664,7 @@ lmi_oews %>%
   theme_minimal()
 ```
 
-
+This plot is a box and whisker of hourly median wage and broken up by region. Each region appears to have around the same median wage. The Central, Southwest, and West appear to have similar 25th to 75th percentiles and the the Northeast, Northwest, Southeast have the smae thing between them. Each region does have outlier median hourly wages.
 
 ```{r Pie chart of total graduates by degree level}
 total_graduates_by_degree <- ipeds_completions %>% 
@@ -648,7 +691,7 @@ ggplot(total_graduates_by_degree, aes(x = "", y = prop, fill = factor(degree_gro
   theme_minimal()
 ```
 
-
+This pie chart breaks down the total number of graduates into what degree they have. It shows that almost 50% have a bachelors and less than 1% have a graduate certificate.
 
 ```{r Plots}
 
