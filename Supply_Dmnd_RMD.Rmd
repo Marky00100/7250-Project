@@ -1,6 +1,8 @@
 ---
 title: "Supply Demand Gap Analysis"
-output: pdf_document
+output:
+  pdf_document:
+    latex_engine: xelatex
 date: "2024-09-28"
 ---
 
