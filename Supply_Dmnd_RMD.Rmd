@@ -725,7 +725,7 @@ lmi_oews %>%
   theme_minimal()
 ```
 
-This plot is a box and whisker of hourly median wage and broken up by region. Each region appears to have around the same median wage. The Central, Southwest, and West appear to have similar 25th to 75th percentiles and the the Northeast, Northwest, Southeast have the smae thing between them. Each region does have outlier median hourly wages.
+This plot is a box and whisker of hourly median wage and broken up by region. Each region appears to have around the same median wage. The Central, Southwest, and West appear to have similar 25th to 75th percentiles and the the Northeast, Northwest, Southeast have the same thing between them. Each region does have outlier median hourly wages.
 
 ```{r Pie chart of total graduates by degree level}
 total_graduates_by_degree <- ipeds_completions %>% 
