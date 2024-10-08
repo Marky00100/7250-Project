@@ -1,8 +1,9 @@
 ---
 title: "Supply Demand Gap Analysis"
+author: "Josh Keffe, Stephan Monroe, Mark Oleson,"
 output:
-  pdf_document:
-    latex_engine: xelatex
+  html_document:
+    code_folding: hide
 date: "2024-09-28"
 ---
 
@@ -11,7 +12,7 @@ knitr::opts_knit$set(root.dir = dirname(rstudioapi::getSourceEditorContext()$pat
 # set the working directory to wherever the rmd is saved, everyone should be able to run the rmd then. 
 
 knitr::opts_chunk$set(echo = TRUE)
-
+knitr::opts_chunk$set(message = FALSE)
 getwd()
 
 #Library Load: install the following packages if you do not have them already
@@ -23,13 +24,13 @@ library(tidyverse)
 library(readxl)
 library(httr)
 library(zoo)
-
 library(knitr)
 library(tibble)
 library(kableExtra)
+library(ggrepel)
 ```
 
-#Purpose
+# Purpose
 
 The Purpose of this project is to provide background information to undergrad students, and to get a better understand of how ssaturated the labor market is for various degrees across the state of Ohio. Were you a student, this would be very
 useful information in deciding what university program to enter and where to focus your skill development. Were you to 
@@ -99,7 +100,8 @@ target_folder <- paste0(common_path, "/data/lmi-data/")
 # Create the target folder, this will be helpful so all group members will automatically have a folder created
   dir.create(target_folder, recursive = TRUE)
 
-# URLs for the different regions, these are all the excel sheets on the Ohio LMI website for each region
+# URLs for the different regions, these are all the excel sheets on the Ohio LMI website for each region. 
+# You can also simply go to each link and see the data.
 url_northeast <- "https://ohiolmi.com/_docs/PROJ/JobsOhio/Northeast.xlsx"
 url_central <- "https://ohiolmi.com/_docs/PROJ/JobsOhio/Central.xlsx"
 url_west <- "https://ohiolmi.com/_docs/PROJ/JobsOhio/West.xlsx"
@@ -127,7 +129,7 @@ response_northeast <- GET(url_northeast, write_disk(temp_northeast, overwrite = 
   data_northeast$jobsohioregion <- "Northeast"
 
 
-#OKAY, now do the same thing for all the other 5 regions, just past the above and change the region name as appropriate. We could probably write a loop....but I am lazy
+#OKAY, now do the same thing for all the other 5 regions, just paste the above and change the region name as appropriate. We could probably write a loop....
 # Process Central region________________________________________________________
 temp_central <- tempfile(fileext = ".xlsx")
 response_central <- GET(url_central, write_disk(temp_central, overwrite = TRUE))
@@ -200,29 +202,29 @@ response_southwest <- GET(url_southwest, write_disk(temp_southwest, overwrite = 
     data_southwest <- data_southwest[1:(first_all_na_row_southwest - 1), ]
   data_southwest$jobsohioregion <- "Southwest"
 
-# Combine all region datasets into a single data frame
+# Combine all region data sets into a single data frame
 lmi_oews <- bind_rows(data_northeast, data_central, data_west, data_southeast, data_northwest, data_southwest)
 #OKAY! all Regions loaded.
 
 ```
 
 
-```{r LMI Job Data Loading for State}
+```{r LMI Job Data Loading for State, message=FALSE}
 #Ohio overall data_____________________________________________________________________________
 # Define the column names manually, including the new 'median_wage_symbol'. This is because I cannot get the same method as the regions to work for Ohio overall, ran out of time. 
 column_names <- c(
   "soc_code",                    # SOC Code
   "soc_lmi_title",               # Occupational Title
   "employment",                  # Employment* 2020 Annual
-  "projected_2030",              # 2030 Projected
-  "change_employment",           # Change in Employment 2020-2030
-  "percent_change",              # Percent
-  "annual_openings_growth",      # Annual Openings Growth
-  "exits",                       # Exits
-  "transfers",                   # Transfers
-  "total_openings",              # Total
-  "median_wage",                 # Median Wage May 2021
-  "median_wage_symbol",          # med wage symbol
+  "projected_2030",             # 2030 Projected
+  "change_employment",          # Change in Employment 2020-2030
+  "percent_change",             # Percent
+  "annual_openings_growth",     # Annual Openings Growth
+  "exits",                      # Exits
+  "transfers",                  # Transfers
+  "total_openings",             # Total
+  "median_wage",                # Median Wage May 2021
+  "median_wage_symbol",         # med wage symbol
   "Typical Education Needed for Entry",    # Not used in the select list
   "Work Experience in a Related Occupation",    # Not used in the select list
   "Typical On-The-Job Training Needed to Attain Competency" # Not used in the select list
@@ -410,13 +412,12 @@ ipeds_completions <- list.files('data/ipeds-completions', '.*zip$', full.names =
 save(ipeds_completions, file = 'data/ipeds-completions/ipeds_completions.rda')
 ```
 
-##End OF data Import, now need to Combine according to CIP-SOC Crosswalk
+# End of data Import, now need to Combine according to CIP-SOC Crosswalk
 
-Final Datasets Created:
+## Final Datasets Created:
+## ohio_region_lmi_data: Occupation demand dataset that includes six Ohio regions and statewide data (jobsohioregion coded numerically for each region).
 
-ohio_region_lmi_data: Occupation demand dataset that includes six Ohio regions and statewide data (jobsohioregion coded numerically for each region).
-
-Main Variables:
+### Main Variables:
 -soc_code: Standard Occupational Classification code.
 -soc_lmi_title: Occupation title based on LMI.
 -employment: Employment count for 2020.
@@ -428,9 +429,9 @@ Main Variables:
 -jobsohioregion: Region identifier (1-6 for regions, 39 for Ohio).
 
 
-ipeds_completions.rda:IPEDS completions data for institutions in Ohio, linked to LMI regions.
+## ipeds_completions.rda:IPEDS completions data for institutions in Ohio, linked to LMI regions.
 
-Main Variables:
+### Main Variables:
 -ipeds_code: Unique identifier for institutions.
 -cip_code: Classification of Instructional Programs code for program areas.
 -degree_group_logord: Ordinal representation of degree levels (e.g., 1 for -certificates, 2 for associate degrees, 3 for bachelor’s degrees).
@@ -471,7 +472,6 @@ The lowest median hourly range is around 9.39 and the max is 96.98. The median h
 
 
 ```{r Combine Regional and State Graduates}
-library(dplyr)
 
 # Combine and De-duplicate Graduate Data _______________________________________
 graduates_data <- ipeds_completions%>%
@@ -494,14 +494,10 @@ graduates_statewide <- graduates_regions %>%
 # Combine regional and statewide data
 state_region_graduates <- bind_rows(graduates_regions, graduates_statewide)
 rm(graduates_regions, graduates_statewide) #don't save the old versions
-
-
 ```
 
 
 ```{r Combine CIP and SOC Data}
-
-
 #read in crosswalk and do second sheet, which is CIP-SOC
 cip_soc <- read_excel("data/cross-walks/CIP2020_SOC2018_Crosswalk.xlsx", sheet = 'CIP-SOC')
 soc_cip <- read_excel("data/cross-walks/CIP2020_SOC2018_Crosswalk.xlsx", sheet = 'SOC-CIP')
@@ -573,7 +569,7 @@ aggregated_data_with_lmi <- aggregated_data %>%
 master_aggregated_data <- aggregated_data_with_lmi%>%
   filter(degree_group_logord == 3)%>%#only keep bachelors for this analysis
   select(-degree_group_logord)%>%
-  group_by(soc_code, cip_code, jobsohioregion, academic_year)%>% #took off CIP code
+  group_by(soc_code, jobsohioregion, academic_year)%>% #took off CIP code
   summarise(
     
                           ####GAP RATIO CALCULATION BELOW#####
@@ -760,7 +756,16 @@ ggplot(total_graduates_by_degree, aes(x = "", y = prop, fill = factor(degree_gro
 
 This pie chart breaks down the total number of graduates into what degree they have. It shows that almost 50% have a bachelors and less than 1% have a graduate certificate.
 
-```{r dotplots, Gap Ratio}
+
+# Quadrant Analysis
+Finally, these dot plots map yearly job openings for associated SOC's against the graduate counts
+for bachelor recipients by CIPs. The size of each dot is representative of the median wage, binned, compared to other occupations. The color shows the gap ratio for that SOC code in 2022, Ohio, bachelors. In this way, dots found in the top left quadrant are coparatively less saturated occupations for Ohio bachelor degree precipitants in 2022. This could be used as a rough start for interested students to find their field of interest and associated CIP titles, and see where those titles fall in the quadrant, the size of the dot, and gap ratio (both by the dot's position and color of the dot itself). This could be modified to apply to whichever JobsOhio region a college entrant may find themselves in. 
+
+Refer to the table for the top 3 occupations from each quadrant analysis. You can see the median wage in the table as well. 
+
+Once you find an occupation you may be interested in, check the CIP-SOC crosswalk for which CIP programs prepare you to enter that occupation. 
+
+```{r dotplots, Gap Ratio, Ohio 2022 Bachelors}
 cips <- cip_soc%>%
   select(CIP2020Title, CIP2020Code)%>%
   unique()
@@ -768,64 +773,88 @@ cips <- cip_soc%>%
 socs <- soc_cip%>%
   select(SOC2018Code, SOC2018Title)%>%
   unique()
+
 # Filter and Prepare the Data
 filtered_data <- master_aggregated_data %>% #which is ONLY BACHELOR EARNERS
-  filter(!is.na(gap_ratio)) %>%
+  filter(!is.na(gap_ratio)) %>% 
   filter(jobsohioregion == "Ohio")%>% #want to do this on the state-level for now
   filter(academic_year == 2022)%>%
   # filter(gap_ratio > quantile(gap_ratio, 0.005) & gap_ratio < quantile(gap_ratio, 0.995)) %>% #easy way to remove outliers that we cannot dig into yet is to remove the first quantile, so a very small percentage. 
-  left_join(cips, by = c("cip_code" = "CIP2020Code")) %>%
+  # left_join(cips, by = c("cip_code" = "CIP2020Code")) %>% #merge in the titles
       left_join(socs, by = c(  "soc_code" = "SOC2018Code"))%>%
- mutate(graduates_ploted = round((total_graduates), 2),  
-  log_yearly_postings = round(ifelse(annual_openings_growth > 0, log(annual_openings_growth + 1), NA_real_), 2
-),  # Fix for NA's
-    cip_group = substr(cip_code, 1, 2)  # Extract two-digit CIP group
-  ) %>% 
-  filter(!is.na(CIP2020Title))%>%
-filter(!is.na(log_yearly_postings))%>%   # Remove titles that did not make it into 2020
-  filter(graduates_ploted > 10)
+mutate(
+  graduates_ploted = round(ifelse(total_cip_graduates_by_soc > 0, 
+                                  log(total_cip_graduates_by_soc + 1), NA_real_), 2),
+  log_yearly_postings = round(ifelse(annual_openings_growth > 0, 
+                                     log(annual_openings_growth + 1), NA_real_), 2),# Fix for NA's
+    soc_group = substr(soc_code, 1, 2)) %>% #get the 2-digit SOC categories
+  # filter(!is.na(CIP2020Title))%>%
+filter(!is.na(log_yearly_postings))  # Remove titles that did not make it into 2020
+  # filter(graduates_ploted > 5)
 
-# Deduplicate the data before selecting observations
+# Deduplicate the data before selecting observations, then select only the variables we need to keep
 deduplicated_data <- filtered_data %>%
-  select(CIP2020Title, SOC2018Title, median_wage, graduates_ploted, log_yearly_postings, cip_group, soc_code, jobsohioregion) %>%
+  select(SOC2018Title, median_wage, graduates_ploted, log_yearly_postings, soc_group, soc_code, jobsohioregion) %>%
   distinct()#okay good, this did not remove any rows, so we did not mess up at least in our grouping recently. 
 
 # Select top 3 observations for each CIP group
 top_left_observations <- deduplicated_data %>%
-  group_by(cip_group) %>%
-  arrange(cip_group, graduates_ploted, desc(log_yearly_postings)) %>%  # Sort by minimum graduates and maximum postings
+  group_by(soc_group) %>% #this is the 2 digit CIP group we created earlier, representative of a larger category of CIP codes. such as "Physcial Sciences" which is the two digit code '40' and represents all physcial science programs, see :https://nces.ed.gov/ipeds/cipcode/cipdetail.aspx?y=55&cipid=88479
+  arrange(soc_group, graduates_ploted, desc(log_yearly_postings)) %>%  # Sort by minimum graduates and maximum postings
   slice_head(n = 3) %>%  # Select the top 3 per group
   ungroup() %>%
-  mutate(
+  mutate( #Make sure all are rounded for cleaner table
     graduates_ploted = round(graduates_ploted, 2),
     log_yearly_postings = round(log_yearly_postings, 2),
     median_wage = round(median_wage, 2)
   ) %>%
-  select(cip_group, CIP2020Title, SOC2018Title, graduates_ploted, log_yearly_postings, median_wage)
+  select(soc_group, SOC2018Title, graduates_ploted, log_yearly_postings, median_wage)
 
-# Print the final table with  smaller text size and limit on decimal places
-kable(
-  top_left_observations, 
-  format = "latex", 
-  caption = "Top-left Observations for Each CIP Group", 
-  digits = 2
-) %>%
-  kable_styling(latex_options = "scale_down", font_size = 7)
+# Print the final table with  smaller text size and limit on decimal places. Use Kable!
+kable(top_left_observations, 
+        format = "html", 
+        caption = "Top-left Observations for Each SOC Group", 
+        digits = 2
+  ) %>%
+    kable_styling(bootstrap_options = "striped", font_size = 12, full_width = F, position = "center")
+  
 
-# Create Dot Plot for Each CIP Group, sdave this as a function first, then run for each group
+# Create Dot Plot for Each CIP Group, save this as a function first, then run for each group. 
+#In theory, we can create many many different starting data sets for different regions or other breakdowns and just
+#apply this 
+##KEEP IN MIND, every dot is a specific SOC-CIPs grouping, so one-SOC and every matching CIP.  
+
 create_dotplot <- function(data) {
-  median_x <- median(data$graduates_ploted, na.rm = TRUE)
+  # Calculate medians for horizontal and vertical lines
+  median_x <- median(data$graduates_ploted, na.rm = TRUE) 
   median_y <- median(data$log_yearly_postings, na.rm = TRUE)
   
+  # Create the ggplot with SOC2018Title labels
   ggplot(data, aes(x = graduates_ploted, y = log_yearly_postings, color = gap_ratio, size = median_wage)) +
     geom_point(alpha = 0.7, position = position_jitter(width = 0.2, height = 0.2)) +
+    
+    # Add text labels using ggrepel!, pretty cool, just type ?ggrepel to get the gist. other examples: https://ggrepel.slowkow.com/articles/examples.html#:~:text=Overview.%20ggrepel%20provides%20geoms%20for%20ggplot2%20to%20repel
+    geom_text_repel(
+      aes(label = SOC2018Title), 
+      size = 1.69, # Set the text size to small
+      color = "black", # Text color
+      box.padding = 0.5,
+      point.padding = 0.2,
+      max.overlaps = 10,  # Limit the number of overlapping texts
+      segment.color = "grey70", #connecting text to points, use light gray, less obnoxious
+      segment.size = 0.2  #Line size
+    ) +
+    
+    #Add horizontal and vertical lines at median values for jobs and grads
     geom_hline(yintercept = median_y, linetype = "dashed", color = "black") +
     geom_vline(xintercept = median_x, linetype = "dashed", color = "black") +
+    
+  #labels and theme
     labs(
-      title = paste("CIP Group:", unique(data$cip_group)),
-      x = "Graduates (with jitter)",
-      y = "Log Yearly Postings",
-      color = "Gap Ratio",
+      title = paste("SOC Group:", unique(data$soc_group)),
+      x = "Log Graduates by SOC (with jitter)",
+      y = "Log Yearly Postings by SOC",
+      color = "Gap Ratio", #need the legend color, note that it changes between plots. 
       size = "Median Wage",
       caption = "Top-left quadrant: many postings and fewer graduates. Dashed lines divide the plot into four parts."
     ) +
@@ -833,12 +862,12 @@ create_dotplot <- function(data) {
     theme(legend.position = "bottom", text = element_text(size = 8))
 }
 
-# Generate and display dot plots for each CIP group
+# Generate and display dot plots for each CIP group. Becuase we kept this as a function, unlike our LMI data, we can apply it do differnt versions of data, so if we want one by Central Ohio region, we can apply that as well. 
 plots <- filtered_data %>%
-  group_by(cip_group) %>%
-  do(plot = create_dotplot(.))
+  group_by(soc_group) %>% #one plot per soc_group
+  do(plot = create_dotplot(.)) #apply our ploting function we have created above
 
-#dot plots
+#lastly, PRINT them!
 for (i in 1:nrow(plots)) {
   print(plots$plot[[i]])
 }
