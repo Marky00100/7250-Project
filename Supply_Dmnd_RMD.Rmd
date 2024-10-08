@@ -23,6 +23,10 @@ library(tidyverse)
 library(readxl)
 library(httr)
 library(zoo)
+
+library(knitr)
+library(tibble)
+library(kableExtra)
 ```
 
 #Purpose
@@ -567,6 +571,8 @@ aggregated_data_with_lmi <- aggregated_data %>%
 #lets do the gap ratio calculations
 # Calculate Gap Ratio ________________________________________________________________________
 master_aggregated_data <- aggregated_data_with_lmi%>%
+  filter(degree_group_logord == 3)%>%#only keep bachelors for this analysis
+  select(-degree_group_logord)%>%
   group_by(soc_code, cip_code, jobsohioregion, academic_year)%>% #took off CIP code
   summarise(
     
@@ -753,3 +759,88 @@ ggplot(total_graduates_by_degree, aes(x = "", y = prop, fill = factor(degree_gro
 ```
 
 This pie chart breaks down the total number of graduates into what degree they have. It shows that almost 50% have a bachelors and less than 1% have a graduate certificate.
+
+```{r dotplots, Gap Ratio}
+cips <- cip_soc%>%
+  select(CIP2020Title, CIP2020Code)%>%
+  unique()
+
+socs <- soc_cip%>%
+  select(SOC2018Code, SOC2018Title)%>%
+  unique()
+# Filter and Prepare the Data
+filtered_data <- master_aggregated_data %>% #which is ONLY BACHELOR EARNERS
+  filter(!is.na(gap_ratio)) %>%
+  filter(jobsohioregion == "Ohio")%>% #want to do this on the state-level for now
+  filter(academic_year == 2022)%>%
+  # filter(gap_ratio > quantile(gap_ratio, 0.005) & gap_ratio < quantile(gap_ratio, 0.995)) %>% #easy way to remove outliers that we cannot dig into yet is to remove the first quantile, so a very small percentage. 
+  left_join(cips, by = c("cip_code" = "CIP2020Code")) %>%
+      left_join(socs, by = c(  "soc_code" = "SOC2018Code"))%>%
+ mutate(graduates_ploted = round((total_graduates), 2),  
+  log_yearly_postings = round(ifelse(annual_openings_growth > 0, log(annual_openings_growth + 1), NA_real_), 2
+),  # Fix for NA's
+    cip_group = substr(cip_code, 1, 2)  # Extract two-digit CIP group
+  ) %>% 
+  filter(!is.na(CIP2020Title))%>%
+filter(!is.na(log_yearly_postings))%>%   # Remove titles that did not make it into 2020
+  filter(graduates_ploted > 10)
+
+# Deduplicate the data before selecting observations
+deduplicated_data <- filtered_data %>%
+  select(CIP2020Title, SOC2018Title, median_wage, graduates_ploted, log_yearly_postings, cip_group, soc_code, jobsohioregion) %>%
+  distinct()#okay good, this did not remove any rows, so we did not mess up at least in our grouping recently. 
+
+# Select top 3 observations for each CIP group
+top_left_observations <- deduplicated_data %>%
+  group_by(cip_group) %>%
+  arrange(cip_group, graduates_ploted, desc(log_yearly_postings)) %>%  # Sort by minimum graduates and maximum postings
+  slice_head(n = 3) %>%  # Select the top 3 per group
+  ungroup() %>%
+  mutate(
+    graduates_ploted = round(graduates_ploted, 2),
+    log_yearly_postings = round(log_yearly_postings, 2),
+    median_wage = round(median_wage, 2)
+  ) %>%
+  select(cip_group, CIP2020Title, SOC2018Title, graduates_ploted, log_yearly_postings, median_wage)
+
+# Print the final table with  smaller text size and limit on decimal places
+kable(
+  top_left_observations, 
+  format = "latex", 
+  caption = "Top-left Observations for Each CIP Group", 
+  digits = 2
+) %>%
+  kable_styling(latex_options = "scale_down", font_size = 7)
+
+# Create Dot Plot for Each CIP Group
+create_dotplot <- function(data) {
+  median_x <- median(data$graduates_ploted, na.rm = TRUE)
+  median_y <- median(data$log_yearly_postings, na.rm = TRUE)
+  
+  ggplot(data, aes(x = graduates_ploted, y = log_yearly_postings, color = gap_ratio, size = median_wage)) +
+    geom_point(alpha = 0.7, position = position_jitter(width = 0.2, height = 0.2)) +
+    geom_hline(yintercept = median_y, linetype = "dashed", color = "black") +
+    geom_vline(xintercept = median_x, linetype = "dashed", color = "black") +
+    labs(
+      title = paste("CIP Group:", unique(data$cip_group)),
+      x = "Log Graduates (with jitter)",
+      y = "Log Yearly Postings",
+      color = "Gap Ratio",
+      size = "Median Wage",
+      caption = "Top-left quadrant: many postings and fewer graduates. Dashed lines divide the plot into four parts."
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom", text = element_text(size = 8))
+}
+
+# Generate and display dot plots for each CIP group
+plots <- filtered_data %>%
+  group_by(cip_group) %>%
+  do(plot = create_dotplot(.))
+
+# Display the dot plots
+for (i in 1:nrow(plots)) {
+  print(plots$plot[[i]])
+}
+
+```
