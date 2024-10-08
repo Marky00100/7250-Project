@@ -812,7 +812,7 @@ kable(
 ) %>%
   kable_styling(latex_options = "scale_down", font_size = 7)
 
-# Create Dot Plot for Each CIP Group
+# Create Dot Plot for Each CIP Group, sdave this as a function first, then run for each group
 create_dotplot <- function(data) {
   median_x <- median(data$graduates_ploted, na.rm = TRUE)
   median_y <- median(data$log_yearly_postings, na.rm = TRUE)
@@ -823,7 +823,7 @@ create_dotplot <- function(data) {
     geom_vline(xintercept = median_x, linetype = "dashed", color = "black") +
     labs(
       title = paste("CIP Group:", unique(data$cip_group)),
-      x = "Log Graduates (with jitter)",
+      x = "Graduates (with jitter)",
       y = "Log Yearly Postings",
       color = "Gap Ratio",
       size = "Median Wage",
@@ -838,7 +838,7 @@ plots <- filtered_data %>%
   group_by(cip_group) %>%
   do(plot = create_dotplot(.))
 
-# Display the dot plots
+#dot plots
 for (i in 1:nrow(plots)) {
   print(plots$plot[[i]])
 }
