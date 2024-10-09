@@ -1,10 +1,16 @@
 ---
 title: "Supply Demand Gap Analysis"
-author: "Josh Keffe, Stephan Monroe, Mark Oleson,"
+author: "Josh Keffe, Stephan Monroe, Mark Oleson"
 output:
   html_document:
+    theme: cerulean
+    toc: true
+    toc_float: true
+    number_sections: true
     code_folding: hide
-date: "2024-09-28"
+    fig_caption: true
+    df_print: paged
+date: 2024-09-28
 ---
 
 ```{r setup, include=FALSE}
@@ -13,6 +19,9 @@ knitr::opts_knit$set(root.dir = dirname(rstudioapi::getSourceEditorContext()$pat
 
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(error = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+
 getwd()
 
 #Library Load: install the following packages if you do not have them already
@@ -32,13 +41,11 @@ library(ggrepel)
 
 # Purpose
 
-The Purpose of this project is to provide background information to undergrad students, and to get a better understand of how ssaturated the labor market is for various degrees across the state of Ohio. Were you a student, this would be very
-useful information in deciding what university program to enter and where to focus your skill development. Were you to 
-have individual-level demand data for each student with specific skills, you would have a much better idea of where you should place your own efforts to increase your earnings possibilities and hire-ability. As we only have access to public  data, we will need to make some assumptions about supply by program, and demand by occupation. Namely, we are trusting the CIP-SOC crosswalk available on O*NET's site, which aligns Classification of Instructional Programs (CIPs) with Standard Occupational Classifications (SOCs). Of course, not all students who graduate from a specific program will be hired into a crosswalked occupation, but this crosswalk gives us general links between students and where they are qualified to be hired. 
+The Purpose of this project is to provide background information to undergrad students, and to better understand of how saturated the labor market is for various degrees across the state of Ohio. Were you a student, this may be useful information in deciding what university program to enter and where to focus your skill development. As we only have access to public  data, we will need to make some assumptions about supply by program, and demand by occupation. Namely, we are trusting the CIP-SOC crosswalk available on O*NET's site, which aligns Classification of Instructional Programs (CIPs) with Standard Occupational Classifications (SOCs). Of course, not all students who graduate from a specific program will be hired into a crosswalked occupation, but this crosswalk gives us general links between students and where they are qualified to be hired, helping us understand how many graduates are competing for the same positions. Unemployed and transfers between occupations are also part of the supply pool, but we have limited the scope of this project to only include recent graduates. 
 
 # Overview
 
-The **Supply-Demand Gap Analysis** consists of two parts: the supply and the demand. Demand data, specifically **LMI predicted yearly job openings**, are used to map demand by occupation. This RMarkdown outlines an attempt at modeling a supply demand gap analysis to help guide current student towards higher paying regions, and occupations with more demand relative to the number of graduates. This supply demand gap is calculated by dividing graduates sorted by **Classification of Instructional Programs (CIPs)** by job demand by **Standard Occupational Classifications (SOCs)**.. 
+The **Supply-Demand Gap Analysis** consists of two parts: the supply and the demand. Demand data, specifically **LMI predicted yearly job openings**, are used to map demand by occupation. For supply counts, we use IPEDS completers counts by CIP code. This RMarkdown outlines an attempt at modeling a supply demand gap analysis to help guide current student towards higher paying regions, and occupations with more demand relative to the number of graduates. This supply demand gap is calculated by dividing graduates sorted by **Classification of Instructional Programs (CIPs)** by job demand by **Standard Occupational Classifications (SOCs)**.. 
 
 - **Supply Stock**: Represents the current available workforce for a given occupation or industry, including employed and unemployed individuals.
 - **Supply Flow**: Represents the incoming workforce soon-to-be available, such as graduating students.
@@ -46,20 +53,20 @@ The **Supply-Demand Gap Analysis** consists of two parts: the supply and the dem
 Data were updated to the most current versions and consolidated into tables. Specifically:
 - **IPEDS (Integrated Postsecondary Education Data System)** was updated through the academic year 2022, serving as the primary source for supply flow.
 
-# Data Cleaning and Transformation
+## Data Overview
 
-## Flow
+### Supply Flow
 
 - **IPEDS**: Publicly available at [IPEDS Website](https://nces.ed.gov/ipeds/), the list of CIPs includes all graduates in the state. Basic cleaning steps include:
   - Added new years of data up to 2022.
   - Standardized CIP codes and aggregated data by award level, program, and institution, then aggregating up to the JobsOhio region level and the state level. 
 
-## Stock
+### Demand
 
 - **LMI**: Long-term labor market information publicly available at [LMI Website](http://ohiolmi.com). Basic cleaning steps include:
   - Standardizing employment projections, occupational codes, and wage data format. 
 
-# Data Structure
+### Data Structure
 
 The counts by completers for the flow data source (IPEDS) are grouped as follows:
 
@@ -68,7 +75,7 @@ The counts by completers for the flow data source (IPEDS) are grouped as follows
 - **JobsOhio Region**: Adjustments based on zip code or county to JobsOhio region.
 - **Education Classification**: Grouped into Certificate, Associate, Bachelor's, and Graduate levels.
 
-# Geography
+### Geography
 
 - Adjusted based on zip code to county to JobsOhio region, and were downloaded from the Ohio Department of Jobs and Family Services. The zip to county data was found from the two sources below:
 [HUD Office of Policy Development and Research](https://www.huduser.gov/) and [UnitedStatesZipCodes.org](https://www.unitedstateszipcodes.org/).
@@ -81,7 +88,7 @@ The counts by completers for the flow data source (IPEDS) are grouped as follows
 <!-- - Combine **CIP 2010 - SOC 2010** with **CIP 2020 - SOC 2018**. -->
 <!-- - Convert **SOC codes from 2018 to 2010**. -->
 
-# References
+### References
 
 - **IPEDS**: [IPEDS Data Center](https://nces.ed.gov/ipeds/datacenter/)
 - **OEWS**: [BLS OEWS](https://www.bls.gov/oes/)
@@ -89,7 +96,7 @@ The counts by completers for the flow data source (IPEDS) are grouped as follows
 - **O*NET**: [O*NET Online](https://www.onetonline.org/)
 - **Workforce Planning**: [Micheli, G. J. L., Martino, A., Porta, F., Cravello, A., Panaro, M., & Calabrese, A. (2023). Workforce planning in project-driven companies: a high-level guideline. *Frontiers in Industrial Engineering*, 1. [https://doi.org/10.3389/fieng.2023.1267244](https://doi.org/10.3389/fieng.2023.1267244)
 
-
+# Data Import and Cleaning
 ```{r LMI Job Data Loading for Regions}
 # This code reads the LMI jobs demand data by region and occupation from the ODJFS website. 
 
@@ -376,10 +383,10 @@ ipeds_degree_remapping <- tribble(
   '5',        3L,
   '6',        1L,
   '7',        4L,
-  '8',        5L,    # grad certificate, has not been included in the Supply Tool
+  '8',        5L,    # grad certificate
   '9',        4L,
   '10',     	4L,
-  '11',     	5L,    # grad certificate, has not been included in the Supply Tool
+  '11',     	5L,    # grad certificate
   '12',       NA,    # subtotals
   '13',       NA,    # subtotals
   '14',       NA,    # subtotals
@@ -412,12 +419,12 @@ ipeds_completions <- list.files('data/ipeds-completions', '.*zip$', full.names =
 save(ipeds_completions, file = 'data/ipeds-completions/ipeds_completions.rda')
 ```
 
-# End of data Import, now need to Combine according to CIP-SOC Crosswalk
-
 ## Final Datasets Created:
-## ohio_region_lmi_data: Occupation demand dataset that includes six Ohio regions and statewide data (jobsohioregion coded numerically for each region).
 
-### Main Variables:
+ohio_region_lmi_data:
+Occupation demand dataset that includes six Ohio regions and statewide data (jobsohioregion coded numerically for each region).
+
+Main Variables:
 -soc_code: Standard Occupational Classification code.
 -soc_lmi_title: Occupation title based on LMI.
 -employment: Employment count for 2020.
@@ -429,9 +436,10 @@ save(ipeds_completions, file = 'data/ipeds-completions/ipeds_completions.rda')
 -jobsohioregion: Region identifier (1-6 for regions, 39 for Ohio).
 
 
-## ipeds_completions.rda:IPEDS completions data for institutions in Ohio, linked to LMI regions.
+ipeds_completions.rda:
+IPEDS completions data for institutions in Ohio, linked to LMI regions.
 
-### Main Variables:
+Main Variables:
 -ipeds_code: Unique identifier for institutions.
 -cip_code: Classification of Instructional Programs code for program areas.
 -degree_group_logord: Ordinal representation of degree levels (e.g., 1 for -certificates, 2 for associate degrees, 3 for bachelor’s degrees).
@@ -596,7 +604,7 @@ master_aggregated_data <- aggregated_data_with_lmi%>%
   ))
 ```
 
-
+# Analysis
 
 ```{r Bar plot of current employment by region}
 ohio_region_lmi_data %>% 
@@ -757,9 +765,9 @@ ggplot(total_graduates_by_degree, aes(x = "", y = prop, fill = factor(degree_gro
 This pie chart breaks down the total number of graduates into what degree they have. It shows that almost 50% have a bachelors and less than 1% have a graduate certificate.
 
 
-# Quadrant Analysis
+#### Quadrant Analysis
 Finally, these dot plots map yearly job openings for associated SOC's against the graduate counts
-for bachelor recipients by CIPs. The size of each dot is representative of the median wage, binned, compared to other occupations. The color shows the gap ratio for that SOC code in 2022, Ohio, bachelors. In this way, dots found in the top left quadrant are coparatively less saturated occupations for Ohio bachelor degree precipitants in 2022. This could be used as a rough start for interested students to find their field of interest and associated CIP titles, and see where those titles fall in the quadrant, the size of the dot, and gap ratio (both by the dot's position and color of the dot itself). This could be modified to apply to whichever JobsOhio region a college entrant may find themselves in. 
+for bachelor recipients by CIPs. The size of each dot is representative of the median wage, binned, compared to other occupations. The the dot's color visualizes the gap ratio for each SOC code in Ohio, using only bachelor graduates from 2022. In this way, dots found in the top left quadrant are comparatively less saturated occupations for Ohio bachelor degree recipients in 2022. This could be used as a rough start for interested students to find their field of interest and associated CIP titles, and see where those titles fall in the quadrant, the size of the dot, and gap ratio (both by the dot's position and color of the dot itself). This could be modified to apply to whichever JobsOhio region a college entrant may find themselves in. 
 
 Refer to the table for the top 3 occupations from each quadrant analysis. You can see the median wage in the table as well. 
 
@@ -816,7 +824,7 @@ kable(top_left_observations,
         caption = "Top-left Observations for Each SOC Group", 
         digits = 2
   ) %>%
-    kable_styling(bootstrap_options = "striped", font_size = 12, full_width = F, position = "center")
+    kable_styling(bootstrap_options = "striped", font_size = 12, position = "center")
   
 
 # Create Dot Plot for Each CIP Group, save this as a function first, then run for each group. 
